@@ -54,7 +54,7 @@ export const links = [
       {
         text: '支払い方法登録',
         icon: 'user',
-        path: ''
+        path: '/payment-method'
       },
       {
         text: '店舗利益',

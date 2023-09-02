@@ -1,12 +1,11 @@
 'use client'
-import { MenuForm } from "@/components/Dialog/MenuForm"
+import { Box, Icon, Text, Flex } from "@chakra-ui/react"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
-import { Box, Icon, Text, Flex } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 
-export const MenuContent = ({ data }) => {
+export const PaymentMethodContent = ({ data }) => {
   const router = useRouter()
 
   const handleDelete = async (id) => {
@@ -24,12 +23,12 @@ export const MenuContent = ({ data }) => {
 
   const tableHeading = [
     {
-      text: 'メニュー名',
-      accessor: 'name',
+      text: '支払い方法名',
+      accessor: 'merchant',
     },
     {
-      text: '価格',
-      accessor: 'price',
+      text: '手数料',
+      accessor: 'commission',
     },
     {
       text: '',
@@ -64,7 +63,7 @@ export const MenuContent = ({ data }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              <MenuForm isUpdate data={row} />
+              {/* <MenuForm isUpdate data={row} /> */}
               <Box
                 h='1px'
                 w='100%'
@@ -91,7 +90,7 @@ export const MenuContent = ({ data }) => {
         tableHeading={tableHeading}
         tableData={data} />
       <Box>
-        <MenuForm />
+        {/* <MenuForm /> */}
       </Box>
     </Box>
   )

@@ -1,9 +1,9 @@
-
 'use client'
 import { Modal } from "./Modal"
 import { TbUserPlus } from 'react-icons/tb'
 import { Button, Icon, Box, Text, Flex, Input, useDisclosure } from '@chakra-ui/react'
 import { RadioButtonGroup } from "@/components/RadioButtonGroup";
+import { FormRowInput } from "../FormRowInput";
 
 export const RegisterCustomer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -29,26 +29,26 @@ export const RegisterCustomer = () => {
       }
     >
       <Flex direction='column' gap='36px 0'>
-        <RowInput label='顧客名'>
+        <FormRowInput label='顧客名'>
           <Input />
-        </RowInput>
-        <RowInput label='性別'>
+        </FormRowInput>
+        <FormRowInput label='性別'>
           <RadioButtonGroup
             options={['男性', '女性']}
           />
-        </RowInput>
-        <RowInput label='電話番号'>
+        </FormRowInput>
+        <FormRowInput label='電話番号'>
           <Input />
-        </RowInput>
-        <RowInput label='年齢'>
+        </FormRowInput>
+        <FormRowInput label='年齢'>
           <Input />
-        </RowInput>
-        <RowInput label='誕生日'>
+        </FormRowInput>
+        <FormRowInput label='誕生日'>
           <Input type="date" />
-        </RowInput>
-        <RowInput label='職業'>
+        </FormRowInput>
+        <FormRowInput label='職業'>
           <Input />
-        </RowInput>
+        </FormRowInput>
         <Box width='100%'>
           <Button
             onClick={onClose}
@@ -66,22 +66,4 @@ export const RegisterCustomer = () => {
   )
 }
 
-const RowInput = ({ label, children }) => {
-  return (
-    <Flex
-      alignItems='center'
-      gap="0 0"
-      width='100%'>
-      <Box flexShrink='0' minW='145px'>
-        <Text
-          fontSize='27px'
-          fontWeight='bold'
-          color='brand.gray'
-        >{label}</Text>
-      </Box>
-      <Box width='100%'>
-        {children}
-      </Box>
-    </Flex>
-  )
-}
+

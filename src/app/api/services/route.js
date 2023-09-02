@@ -16,3 +16,22 @@ export const GET = async() => {
       )
   }
 }
+
+// add service
+export const POST = async(req) => {
+  try {
+    const body = await req.json()
+    const service = await prisma.services.create({
+      data: body
+    })
+    return new NextResponse(
+      JSON.stringify(service), 
+      {status: 201}
+    )
+  } catch (error) {
+    return new NextResponse(
+      JSON.stringify({message: 'Something went wrong!'}), 
+      {status: 500}
+      )
+  }
+}

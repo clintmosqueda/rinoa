@@ -14,7 +14,9 @@ model services {
 }
 
 model merch {
-  id    Int    @id @default(autoincrement())
-  name  String @unique(map: "name_UNIQUE") @db.VarChar(45)
-  price String @db.VarChar(45)
+  id        Int      @id @default(autoincrement())
+  name      String   @unique(map: "name_UNIQUE") @db.VarChar(45)
+  price     String   @db.VarChar(45)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
