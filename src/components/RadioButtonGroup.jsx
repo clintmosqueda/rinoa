@@ -1,48 +1,58 @@
 'use client'
-import { Box, HStack, useRadioGroup, useRadio } from "@chakra-ui/react"
+import { Text, Box, HStack, useRadioGroup, useRadio } from "@chakra-ui/react"
 
-export const RadioButtonGroup = ({ options, ...rest }) => {
-  const { getRootProps, getRadioProps, isDisabled } = useRadioGroup({ ...rest })
+export const RadioButtonGroup = ({ options, handleChange, ...rest }) => {
 
-  const group = getRootProps()
+  const { value, getRadioProps, getRootProps } = useRadioGroup({
+    onChange: handleChange,
+  })
 
   return (
-    <HStack {...group}>
-      {options.map((value) => {
-        const radio = getRadioProps({ value })
+    <HStack
+      {...rest}
+      {...getRootProps()}>
+      {options.map((option) => {
         return (
-          <RadioButton key={value} {...radio}>
-            {value}
+          <RadioButton
+            key={option.id}
+            {...getRadioProps({ value: option.id })}>
+            {option.name}
           </RadioButton>
         )
       })}
     </HStack>
   )
+
+  // https://chakra-ui.com/docs/hooks/use-radio-group
+  // https://www.youtube.com/watch?v=zgKH12s_95A&t=366s
 }
 
 export const RadioButton = (props) => {
-  const { getInputProps, getRadioProps } = useRadio(props)
-  const input = getInputProps()
-  const checkbox = getRadioProps()
+  const { ...radioProps } = props
+  const { state, getInputProps, getRadioProps, htmlProps, getLabelProps } =
+    useRadio(radioProps)
+  // console.log('getLabelProps', getLabelProps)
 
   return (
-    <Box as='label'>
-      <input {...input} hidden />
+    <Box cursor='pointer'>
+      <input {...getInputProps({})} hidden />
       <Box
-        {...checkbox}
+        {...getRadioProps()}
         minWidth='119px'
         textAlign='center'
         fontSize='11px'
         fontWeight='bold'
-        bg='brand.lightGray'
+        // bg='brand.lightGray'
+        bg={state.isChecked ? 'brand.purple' : 'brand.lightGray'}
+        color={state.isChecked ? 'white' : 'black'}
         cursor='pointer'
         borderWidth='1px'
         borderRadius='md'
         boxShadow='md'
-        _checked={{
-          bg: 'brand.purple',
-          color: 'white',
-        }}
+        // _checked={{
+        //   bg: 'brand.purple',
+        //   color: 'white',
+        // }}
         // _focus={{
         //   boxShadow: 'outline',
         // }}

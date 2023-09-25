@@ -24,7 +24,8 @@ export const RegisterCustomer = () => {
           fontWeight='bold'
           padding='0 25px 0 10px'
         >
-          顧客追加
+          {/* 顧客追加 */}
+          add customer
         </Button>
       }
     >

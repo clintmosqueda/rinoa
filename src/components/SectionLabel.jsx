@@ -17,7 +17,9 @@ export const SectionLabel = ({ step, totalSteps, label, children }) => {
           fontSize='17px'
           lineHeight='125%'
           fontWeight='bold'
-        >ステップ {step} / {totalSteps}</Text>
+        >
+          ステップ
+          {step} / {totalSteps}</Text>
         <Text
           color='brand.gray'
           fontSize='27px'

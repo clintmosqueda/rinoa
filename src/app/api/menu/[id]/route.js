@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/utils/connect"
 
-// delete merch
+// delete product
 export const DELETE = async(req, { params }) => {
   // const id = params.id
   const { id } = params
   try {
-    await prisma.merch.delete({
+    await prisma.products.delete({
       where: {
         id: parseInt(id)
       }
@@ -24,16 +24,17 @@ export const DELETE = async(req, { params }) => {
       )
   }
 }
-// update merch
+// update product
 export const PUT = async(req, { params }) => {
   const {name, price} = await req.json()
   const { id } = params
   try {
-    await prisma.merch.update({
+    await prisma.products.update({
       where: { id: parseInt(id)},
       data: {
         name,
-        price
+        price: parseFloat(price),
+        updated_at: new Date()
       }
     })
     return new NextResponse(

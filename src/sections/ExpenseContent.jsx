@@ -1,35 +1,61 @@
 'use client'
-import { MenuForm } from "@/components/Dialog/MenuForm"
+import { ExpenseForm } from "@/components/Dialog/ExpenseForm"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
 import { Box, Icon, Text, Flex } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
+import { assignedEmployee } from "@/utils/assignedEmployee"
+import { ymdFormat } from "@/utils/timeHelper"
 
-export const MenuContent = ({ data }) => {
+export const ExpenseContent = ({ data, employees }) => {
   const router = useRouter()
 
   const handleDelete = async (id) => {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/menu/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/expense/${id}`, {
       method: 'DELETE'
     })
 
     if (res.status === 200) {
       router.refresh()
-      console.log('the product has been deleted')
+      console.log('Expense has been deleted')
     }
 
   }
 
   const tableHeading = [
     {
-      text: 'メニュー名',
+      text: 'Name',
       accessor: 'name',
     },
     {
-      text: '価格',
-      accessor: 'price',
+      text: 'Description',
+      accessor: 'description',
+    },
+    {
+      text: 'Cost',
+      accessor: 'cost',
+    },
+    {
+      text: 'EIC',
+      accessor: 'employee_id',
+      render: (row) => {
+        return (
+          <>
+            {assignedEmployee(row.employee_id, employees)}
+          </>
+        )
+      }
+    },
+    {
+      text: 'Date',
+      accessor: 'updated_at',
+      render: (row) => {
+        return (
+          <>{ymdFormat(row.updated_at)}</>
+        )
+      }
     },
     {
       text: '',
@@ -64,7 +90,7 @@ export const MenuContent = ({ data }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              <MenuForm isUpdate data={row} />
+              <ExpenseForm isUpdate data={row} />
               <Box
                 h='1px'
                 w='100%'
@@ -91,7 +117,7 @@ export const MenuContent = ({ data }) => {
         tableHeading={tableHeading}
         tableData={data} />
       <Box>
-        <MenuForm />
+        <ExpenseForm />
       </Box>
     </Box>
   )

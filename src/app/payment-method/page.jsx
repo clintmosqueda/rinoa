@@ -1,27 +1,11 @@
 import React from 'react'
 import { PaymentMethodContent } from '@/sections/PaymentMethodContent'
+import { getPaymentMethod } from "@/lib/paymentMethod"
 
-const PaymentMethod = () => {
-
-  const data = [
-    {
-      id: 1,
-      merchant: 'Cash',
-      commission: '0'
-    },
-    {
-      id: 2,
-      merchant: 'Card payment',
-      commission: '2.75%'
-    },
-    {
-      id: 3,
-      merchant: 'Gcash',
-      commission: '2%'
-    },
-  ]
+const PaymentMethod = async () => {
+  const paymentMethod = await getPaymentMethod()
   return (
-    <PaymentMethodContent data={data} />
+    <PaymentMethodContent data={paymentMethod} />
   )
 }
 

@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model services {
+  id    Int    @id @default(autoincrement())
+  name  String @unique(map: "name_UNIQUE") @db.VarChar(45)
+  price String @db.VarChar(45)
+}
+
+model PaymentMethod {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique @db.VarChar(200)
+  commission String   @db.VarChar(45)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("payment_method")
+}
+
+model Expense {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(200)
+  cost      Float    @db.Float
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("expenses")
+}
+
+model Product {
+  id            Int          @id @default(autoincrement())
+  name          String       @unique @db.VarChar(200)
+  price         Float        @db.Float
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  appointmentId Int?
+  Appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+
+  @@index([appointmentId], map: "product_appointmentId_fkey")
+  @@map("product")
+}
+
+model Menu {
+  id            Int          @id @default(autoincrement())
+  name          String       @unique @db.VarChar(200)
+  price         Float        @db.Float
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  appointmentId Int?
+  Appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+
+  @@index([appointmentId], map: "menu_appointmentId_fkey")
+  @@map("menu")
+}
+
+model Employee {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(45)
+  phone       String        @unique @db.VarChar(200)
+  position    String?       @db.VarChar(45)
+  salary      Float         @db.Float
+  address     String?       @db.VarChar(45)
+  birthday    DateTime?
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  Appointment Appointment[]
+
+  @@map("employee")
+}
+
+model Appointment {
+  id              Int       @id @default(autoincrement())
+  paymentMethodId Int       @map("payment_method_id")
+  employeeId      Int       @map("employee_id")
+  customerId      Int       @map("customer_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  total           Float     @db.Float
+  employee        Employee  @relation(fields: [employeeId], references: [id])
+  services        Menu[]
+  purchases       Product[]
+
+  @@index([employeeId], map: "Appointment_employee_id_fkey")
+}
+
+model customer {
+  customer_id   Int     @id @unique(map: "customer_id_UNIQUE") @default(autoincrement())
+  customer_name String  @db.VarChar(45)
+  gender        String? @db.VarChar(45)
+}

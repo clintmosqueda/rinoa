@@ -2,7 +2,7 @@
 import { Box, Icon, Text, Flex, Button } from "@chakra-ui/react"
 import { TbPlus } from 'react-icons/tb'
 
-export const AddBtn = ({ text }) => {
+export const AddBtn = ({ text, ...rest }) => {
   return (
     <Button
       mt='20px'
@@ -16,7 +16,9 @@ export const AddBtn = ({ text }) => {
       height='56px'
       padding='0'
       lineHeight='56px'
-      w='100%'>
+      w='100%'
+      {...rest}
+    >
       <Icon fontSize='30px' as={TbPlus} />
     </Button>
   )

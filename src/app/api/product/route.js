@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/utils/connect"
-// get all merch
+// get all products
 export const GET = async() => {
   try {
-    const merch = await prisma.merch.findMany()
+    const products = await prisma.products.findMany({
+      where: {
+        type: 'merchandise'
+      }
+    })
     return new NextResponse(
-      JSON.stringify(merch), 
+      JSON.stringify(products), 
       {status: 200}
     )
   } catch (error) {
@@ -20,11 +24,11 @@ export const GET = async() => {
 export const POST = async(req) => {
   try {
     const body = await req.json()
-    const merch = await prisma.merch.create({
+    const product = await prisma.products.create({
       data: body
     })
     return new NextResponse(
-      JSON.stringify(merch), 
+      JSON.stringify(product), 
       {status: 201}
     )
   } catch (error) {

@@ -28,7 +28,7 @@ export const links = [
       {      
         text: '売り上げ確認',
         icon: 'login',
-        path: '/sales'
+        path: '/customers'
       }
     ]
   },
@@ -39,7 +39,7 @@ export const links = [
       {
         text: '従業員登録',
         icon: 'user',
-        path: ''
+        path: '/employee'
       },
       {
         text: '技術メニュー登録',
@@ -49,7 +49,7 @@ export const links = [
       {
         text: '店販商品登録',
         icon: 'user',
-        path: '/merchandise'
+        path: '/product'
       },
       {
         text: '支払い方法登録',
@@ -59,7 +59,7 @@ export const links = [
       {
         text: '店舗利益',
         icon: 'user',
-        path: ''
+        path: '/sales'
       },
     ]
   },

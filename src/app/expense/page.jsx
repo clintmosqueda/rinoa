@@ -1,8 +1,14 @@
+import { getExpenses } from '@/lib/expense'
+import { getEmployees } from '@/lib/employee'
+import { ExpenseContent } from '@/sections/ExpenseContent'
 import React from 'react'
 
-const Expense = () => {
+const Expense = async () => {
+  const expenses = await getExpenses()
+  const employees = await getEmployees()
+
   return (
-    <div>Expense</div>
+    <ExpenseContent data={expenses} employees={employees} />
   )
 }
 

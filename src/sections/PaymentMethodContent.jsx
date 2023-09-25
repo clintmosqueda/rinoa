@@ -4,13 +4,14 @@ import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
+import { PaymentMethodForm } from "@/components/Dialog/PaymentMethodForm"
 
 export const PaymentMethodContent = ({ data }) => {
   const router = useRouter()
 
   const handleDelete = async (id) => {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/services/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/paymentMethod/${id}`, {
       method: 'DELETE'
     })
 
@@ -24,11 +25,11 @@ export const PaymentMethodContent = ({ data }) => {
   const tableHeading = [
     {
       text: '支払い方法名',
-      accessor: 'merchant',
+      accessor: 'name',
     },
     {
       text: '手数料',
-      accessor: 'commission',
+      accessor: 'interest',
     },
     {
       text: '',
@@ -63,7 +64,7 @@ export const PaymentMethodContent = ({ data }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              {/* <MenuForm isUpdate data={row} /> */}
+              <PaymentMethodForm isUpdate data={row} />
               <Box
                 h='1px'
                 w='100%'
@@ -90,7 +91,7 @@ export const PaymentMethodContent = ({ data }) => {
         tableHeading={tableHeading}
         tableData={data} />
       <Box>
-        {/* <MenuForm /> */}
+        <PaymentMethodForm />
       </Box>
     </Box>
   )

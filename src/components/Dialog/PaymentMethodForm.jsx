@@ -5,11 +5,11 @@ import { Button, Icon, Box, Text, Flex, Input, useDisclosure } from '@chakra-ui/
 import { AddBtn } from "@/components/AddBtn"
 import { FormRowInput } from "../FormRowInput";
 import { useForm } from 'react-hook-form'
-import { addMenu, updateMenu } from "@/lib/menu";
+import { addPaymentMethod, updatePaymentMethod } from "@/lib/paymentMethod";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const MenuForm = ({ isUpdate = false, data }) => {
+export const PaymentMethodForm = ({ isUpdate = false, data }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -24,28 +24,29 @@ export const MenuForm = ({ isUpdate = false, data }) => {
     if (data) {
       reset({
         name: data.name,
-        price: data.price
+        interest: data.interest
       })
     }
   }, [data])
 
   const submitAdd = async (formData) => {
-    addMenu(formData)
+    addPaymentMethod(formData)
     onClose()
     router.refresh()
     reset({
       name: '',
-      price: ''
+      interest: ''
     })
   }
 
   const submitUpdate = async (formData) => {
-    updateMenu(data.id, formData)
+    console.log('formData', formData)
+    updatePaymentMethod(data.id, formData)
     onClose()
     router.refresh()
     reset({
       name: '',
-      price: ''
+      interest: ''
     })
 
   }
@@ -86,14 +87,14 @@ export const MenuForm = ({ isUpdate = false, data }) => {
         </FormRowInput>
         <FormRowInput
           label='価格'
-          error={!!errors?.price}
+          error={!!errors?.interest}
         >
           <Flex alignItems='center' gap='0 15px'>
             <Box>
               <Input
                 type="number"
                 borderColor="brand.lighterGray"
-                {...register('price', {
+                {...register('interest', {
                   validate: {
                     required: (val) => {
                       let notEmpty = val?.trim().length > 0

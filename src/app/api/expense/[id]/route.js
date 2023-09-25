@@ -1,18 +1,17 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/utils/connect"
 
-// delete service
+// delete expense
 export const DELETE = async(req, { params }) => {
-  // const id = params.id
   const { id } = params
   try {
-    await prisma.services.delete({
+    await prisma.expenses.delete({
       where: {
         id: parseInt(id)
       }
     })
     return new NextResponse(
-      JSON.stringify('Menu Item has been deleted!'), 
+      JSON.stringify('Expense has been deleted!'), 
       {status: 200}
     )
     
@@ -24,20 +23,23 @@ export const DELETE = async(req, { params }) => {
       )
   }
 }
-// update service
+// update expense
 export const PUT = async(req, { params }) => {
-  const {name, price} = await req.json()
+  const {name, cost, description, employee_id} = await req.json()
   const { id } = params
   try {
-    await prisma.services.update({
+    await prisma.expenses.update({
       where: { id: parseInt(id)},
       data: {
         name,
-        price
+        cost: parseFloat(cost),
+        description,
+        employee_id: parseInt(employee_id),
+        updated_at: new Date()
       }
     })
     return new NextResponse(
-      JSON.stringify('Menu Item has been Updated!'), 
+      JSON.stringify('Expense has been Updated!'), 
       {status: 200}
     )
     

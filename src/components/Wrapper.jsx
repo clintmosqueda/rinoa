@@ -1,7 +1,7 @@
 'use client'
 import { Sidebar } from "@/sections/Sidebar"
 import { Box, Flex, Text } from "@chakra-ui/react"
-import { currentDate } from "@/utils/time"
+import { currentDate } from "@/utils/timeHelper"
 
 export const Wrapper = ({ children }) => {
   return (

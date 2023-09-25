@@ -42,6 +42,7 @@ export const Menu = ({ text, children }) => {
 export const MenuItem = ({ text, link = '/', active, menuIcon }) => {
   return (
     <Box
+      cursor='pointer'
       borderRadius='8px'
       bg={active ? 'brand.purple' : ''}
       color={active ? 'brand.white' : 'inherit'}

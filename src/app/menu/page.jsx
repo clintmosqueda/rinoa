@@ -1,10 +1,10 @@
-import { getServices } from "@/lib/services"
+import { getMenu } from "@/lib/menu"
 import { MenuContent } from "@/sections/MenuContent"
 
 const Menu = async () => {
-  const services = await getServices()
+  const menus = await getMenu()
   return (
-    <MenuContent data={services} />
+    <MenuContent data={menus} />
   )
 }
 

@@ -6,12 +6,12 @@ import { Box, Icon, Text, Flex } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 
-export const MenuContent = ({ data }) => {
+export const CustomersContent = ({ data }) => {
   const router = useRouter()
 
   const handleDelete = async (id) => {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/menu/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/customer/${id}`, {
       method: 'DELETE'
     })
 
@@ -24,12 +24,28 @@ export const MenuContent = ({ data }) => {
 
   const tableHeading = [
     {
-      text: 'メニュー名',
+      text: 'ID',
+      accessor: 'id',
+    },
+    {
+      text: 'Name',
       accessor: 'name',
     },
     {
-      text: '価格',
-      accessor: 'price',
+      text: 'Gender',
+      accessor: 'gender',
+    },
+    {
+      text: 'Number',
+      accessor: 'phone',
+    },
+    {
+      text: 'Nationality',
+      accessor: 'nationality',
+    },
+    {
+      text: 'Job',
+      accessor: 'occupation',
     },
     {
       text: '',

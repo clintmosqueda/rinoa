@@ -5,11 +5,11 @@ import { Button, Icon, Box, Text, Flex, Input, useDisclosure } from '@chakra-ui/
 import { AddBtn } from "@/components/AddBtn"
 import { FormRowInput } from "../FormRowInput";
 import { useForm } from 'react-hook-form'
-import { addMenu, updateMenu } from "@/lib/menu";
+import { addEmployee, updateEmployee } from "@/lib/employee";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const MenuForm = ({ isUpdate = false, data }) => {
+export const EmployeeForm = ({ isUpdate = false, data }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -30,7 +30,7 @@ export const MenuForm = ({ isUpdate = false, data }) => {
   }, [data])
 
   const submitAdd = async (formData) => {
-    addMenu(formData)
+    addEmployee(formData)
     onClose()
     router.refresh()
     reset({
@@ -40,7 +40,8 @@ export const MenuForm = ({ isUpdate = false, data }) => {
   }
 
   const submitUpdate = async (formData) => {
-    updateMenu(data.id, formData)
+    console.log('formData', formData)
+    updateEmployee(data.id, formData)
     onClose()
     router.refresh()
     reset({

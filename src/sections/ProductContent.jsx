@@ -1,17 +1,17 @@
 'use client'
-import { MenuForm } from "@/components/Dialog/MenuForm"
+import { ProductForm } from "@/components/Dialog/ProductForm"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
-import { Box, Icon, Text, Flex } from "@chakra-ui/react"
+import { Box, Icon, Text, Flex, useDisclosure } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 
-export const MenuContent = ({ data }) => {
+export const ProductContent = ({ data }) => {
   const router = useRouter()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleDelete = async (id) => {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/menu/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/product/${id}`, {
       method: 'DELETE'
     })
 
@@ -19,7 +19,6 @@ export const MenuContent = ({ data }) => {
       router.refresh()
       console.log('the product has been deleted')
     }
-
   }
 
   const tableHeading = [
@@ -64,7 +63,7 @@ export const MenuContent = ({ data }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              <MenuForm isUpdate data={row} />
+              <ProductForm isUpdate data={row} />
               <Box
                 h='1px'
                 w='100%'
@@ -91,7 +90,7 @@ export const MenuContent = ({ data }) => {
         tableHeading={tableHeading}
         tableData={data} />
       <Box>
-        <MenuForm />
+        <ProductForm />
       </Box>
     </Box>
   )

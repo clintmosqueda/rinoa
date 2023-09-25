@@ -1,17 +1,17 @@
 'use client'
-import { MerchForm } from "@/components/Dialog/MerchForm"
+import { EmployeeForm } from "@/components/Dialog/EmployeeForm"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
-import { Box, Icon, Text, Flex, useDisclosure } from "@chakra-ui/react"
+import { Box, Icon, Text, Flex } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 
-export const MerchContent = ({ data }) => {
+export const EmployeeContent = ({ data }) => {
   const router = useRouter()
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleDelete = async (id) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/merch/${id}`, {
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/employee/${id}`, {
       method: 'DELETE'
     })
 
@@ -19,16 +19,25 @@ export const MerchContent = ({ data }) => {
       router.refresh()
       console.log('the product has been deleted')
     }
+
   }
 
   const tableHeading = [
     {
-      text: 'メニュー名',
+      text: 'name',
       accessor: 'name',
     },
     {
-      text: '価格',
-      accessor: 'price',
+      text: 'phone',
+      accessor: 'phone',
+    },
+    {
+      text: 'address',
+      accessor: 'address',
+    },
+    {
+      text: 'position',
+      accessor: 'position',
     },
     {
       text: '',
@@ -63,7 +72,7 @@ export const MerchContent = ({ data }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              <MerchForm isUpdate data={row} />
+              <EmployeeForm isUpdate data={row} />
               <Box
                 h='1px'
                 w='100%'
@@ -88,9 +97,9 @@ export const MerchContent = ({ data }) => {
       <PageTitle title='メニュー情報管理' />
       <Table
         tableHeading={tableHeading}
-        tableData={data} />
+        tableData={data || []} />
       <Box>
-        <MerchForm />
+        <EmployeeForm />
       </Box>
     </Box>
   )
