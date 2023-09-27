@@ -1,11 +1,8 @@
-'use client'
-import React, { useContext } from 'react'
 import { EmployeeContent } from '@/sections/EmployeeContent'
 import { getEmployees } from '@/lib/employee'
-import { ValueContext } from '@/context/ValueContext'
 
-const Employee = () => {
-  const { employees } = useContext(ValueContext)
+const Employee = async () => {
+  const employees = await getEmployees()
   return (
     <EmployeeContent data={employees} />
   )

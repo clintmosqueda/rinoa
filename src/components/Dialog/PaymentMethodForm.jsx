@@ -62,7 +62,7 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
 
   return (
     <Modal
-      heading='メニュー入力'
+      heading='支払い方法登録'
       isOpen={isOpen}
       onOpen={onOpen}
       onClose={onClose}
@@ -70,7 +70,7 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
     >
       <Flex direction='column' gap='36px 0'>
         <FormRowInput
-          label='メニュー'
+          label='支払い方法名'
           error={!!errors?.name}
         >
           <Input
@@ -85,8 +85,9 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
             })}
           />
         </FormRowInput>
+
         <FormRowInput
-          label='価格'
+          label='手数料'
           error={!!errors?.interest}
         >
           <Flex alignItems='center' gap='0 15px'>
@@ -104,7 +105,7 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
                 })}
               />
             </Box>
-            <Text>PHP</Text>
+            <Text>%</Text>
           </Flex>
         </FormRowInput>
 

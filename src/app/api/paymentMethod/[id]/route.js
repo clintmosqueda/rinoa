@@ -33,7 +33,7 @@ export const PUT = async(req, { params }) => {
       where: { id: parseInt(id)},
       data: {
         name,
-        interest: parseFloat(price),
+        interest: parseFloat(interest),
         updated_at: new Date()
       }
     })

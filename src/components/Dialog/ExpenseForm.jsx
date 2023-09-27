@@ -17,13 +17,6 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [employeeId, setEmployeeId] = useState(null)
 
-  const staffs = employees.map((employee) => {
-    return {
-      id: employee.id,
-      name: employee.name
-    }
-  })
-
   const {
     register,
     handleSubmit,
@@ -165,7 +158,7 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
         >
           <RadioGroup name="employeeIncharge" onChange={(val) => handleRadioChange(val)} value={parseInt(employeeId)}>
             <Flex direction="row" flexWrap='wrap' gap='10px'>
-              {staffs.map(staff => (
+              {employees.map(staff => (
                 <CustomRadio
                   key={staff.id}
                   value={staff.id}

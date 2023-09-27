@@ -1,17 +1,30 @@
-import { AppointmentContent } from "@/sections/AppointmentContent";
-// import { getProduct } from "@/lib/product";
-// import { getServices } from "@/lib/services";
-// import { getCustomer } from "@/lib/customer";
+import { OrderContent } from "@/sections/OrderContent";
+import { getProduct } from "@/lib/product";
+import { getMenu } from "@/lib/menu";
+import { getCustomers } from "@/lib/customer";
+import { getPaymentMethod } from "@/lib/paymentMethod"
 
-export default async function Home() {
-  // const customers = await getCustomer()
-  // const customerRecords = customers.map(customer => {
-  //   return {
-  //     name: customer.customer_name,
-  //     value: customer.customer_name
-  //   }
-  // })
+const Home = async () => {
+  const paymentMethods = await getPaymentMethod()
+  const customerData = await getCustomers()
+  const products = await getProduct()
+  const menus = await getMenu()
+  const customers = customerData.map(customer => {
+    return {
+      name: customer.name,
+      value: customer.id
+    }
+  })
+
+  console.log('menus', menus)
   return (
-    <AppointmentContent />
+    <OrderContent
+      customers={customers}
+      paymentMethods={paymentMethods}
+      productList={products}
+      menuList={menus}
+    />
   )
 }
+
+export default Home

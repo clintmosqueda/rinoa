@@ -13,9 +13,7 @@ export const addPaymentMethod = async(formData) => {
         method: 'POST',
         body: JSON.stringify({
           name: formData.name,
-          price: formData.price,
-          type: 'menu',
-          updated_at: new Date()
+          interest: parseFloat(formData.interest),
         })
       })
       const data = await res.json()
@@ -40,7 +38,7 @@ export const updatePaymentMethod = async(id, formData) => {
     method: 'PUT',
     body: JSON.stringify({
       name: formData.name,
-      price: formData.price,
+      interest: parseFloat(formData.interest),
     })
   })
 
