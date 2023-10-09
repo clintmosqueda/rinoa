@@ -1,12 +1,15 @@
 'use client'
-import { Box, Text, Flex, Input, Button, RadioGroup } from "@chakra-ui/react"
+import { Box, Text, Flex, Input, Button, RadioGroup, Icon } from "@chakra-ui/react"
+import { TbMinus } from 'react-icons/tb'
 import { SectionLabel } from "@/components/SectionLabel"
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RegisterCustomer } from "@/components/Dialog/RegisterCustomer";
 import { AddBtn } from "@/components/AddBtn";
-import { ValueContext } from '@/context/ValueContext'
 import { CustomRadio } from "@/components/CustomRadio";
+import { addOrder } from "@/lib/order";
 import Select from 'react-select'
+import { useRouter } from "next/navigation";
+
 
 const inputStyle = () => ({
   // backgroundColor: 'red'
@@ -40,10 +43,33 @@ const customStyles = {
   }
 }
 
-export const OrderContent = ({ paymentMethods, customers, productList, menuList }) => {
-  const { employees } = useContext(ValueContext)
-  const [menus, setMenus] = useState([{ menuId: null, price: 0, menuEmployeeId: null, discount: 0, total: 0 }])
-  const [products, setProducts] = useState([{ productId: null, price: 0, productEmployeeId: null, quantity: 1, discount: 0, total: 0 }])
+export const OrderContent = ({
+  paymentMethods,
+  customers,
+  productList,
+  menuList,
+  employees
+}) => {
+  const router = useRouter()
+  const [menus, setMenus] = useState([{
+    menuId: null,
+    price: 0,
+    menuEmployeeId: null,
+    discount: 0,
+    total: 0,
+    defaultPrice: 0,
+    type: 'Menu'
+  }])
+  const [products, setProducts] = useState([{
+    productId: null,
+    price: 0,
+    productEmployeeId: null,
+    quantity: 1,
+    discount: 0,
+    total: 0,
+    defaultPrice: 0,
+    type: 'Product'
+  }])
   const [merchantId, setMerchantId] = useState(null)
   const [accountantId, setAccountantId] = useState(null)
   const [customerId, setCustomerId] = useState(null)
@@ -79,12 +105,26 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
       case 'menu':
         const menu = [...menus]
         menu[index][target.name] = target.value
+        if (target.name === 'discount' || target.name === 'price') {
+          if (target.value === '' || target.value === null) {
+            menu[index][target.name] = 0
+          } else {
+            menu[index][target.name] = target.value
+          }
+        }
         setMenus(menu)
         break;
 
       case 'product':
         const product = [...products]
         product[index][target.name] = target.value
+        if (target.name === 'discount' || target.name === 'price') {
+          if (target.value === '' || target.value === null) {
+            product[index][target.name] = 0
+          } else {
+            product[index][target.name] = target.value
+          }
+        }
         setProducts(product)
         break;
 
@@ -121,6 +161,7 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
       case 'menu':
         const menu = [...menus]
         menu[index].price = select.price
+        menu[index].defaultPrice = select.price
         menu[index].menuId = select.id
         setMenus(menu)
         break;
@@ -128,6 +169,7 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
       case 'product':
         const product = [...products]
         product[index].price = select.price
+        product[index].defaultPrice = select.price
         product[index].productId = select.id
         setProducts(product)
         break;
@@ -137,15 +179,41 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const menuData = menus.map(menu => {
+      return {
+        product_id: parseInt(menu.menuId),
+        price: parseFloat(menu.price),
+        employee_id: parseInt(menu.menuEmployeeId),
+        discount: parseInt(menu.discount),
+        type: menu.type,
+        quantity: null,
+      }
+    })
+    const productData = products.map(product => {
+      return {
+        product_id: parseInt(product.productId),
+        price: parseFloat(product.price),
+        employee_id: parseInt(product.productEmployeeId),
+        discount: parseInt(product.discount),
+        type: product.type,
+        quantity: parseInt(product.quantity),
+      }
+    })
+    const orderProducts = [...menuData, ...productData]
+
     const data = {
-      customerId: customerId,
-      menus: menus,
-      products: products,
-      grandTotal: total,
-      paymentMethod: parseInt(merchantId),
-      accountantId: parseInt(accountantId),
+      order: {
+        grand_total: total,
+        payment_method_id: parseInt(merchantId),
+        employee_id: parseInt(accountantId),
+        customer_id: customerId,
+      },
+      order_products: orderProducts
     }
+    console.log('data', data)
+    addOrder(data)
+    // router.refresh()
   }
 
   return (
@@ -204,7 +272,30 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
               borderColor='#c4c4c4'
               borderRadius='5px'
               padding='46px 54px 35px'
+              position='relative'
             >
+              {/* {index > 0 && (
+                <Box 
+                  as="span"
+                  position="absolute"
+                  right="-15px"
+                  top="-15px"
+                  width='30px'
+                  height='30px'
+                  borderRadius='50%'
+                  display='flex'
+                  alignItems='center'
+                  justifyContent='center'
+                  bgColor='#c4c4c4'
+                  cursor='pointer'
+                  onClick={() => setMenus(menus.filter(item => item.menuId !== mnu.menuId))}
+                >
+                  <Icon
+                  fontSize='25px' 
+                  as={TbMinus} />
+                </Box>
+              )} */}
+
               <Flex flexDirection='column' rowGap='50px'>
                 <Flex justifyContent='space-between' alignItems='flex-start'>
                   <Flex columnGap='50px'>
@@ -235,11 +326,18 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
                             name="price"
                             type="number"
                             value={mnu.price}
+                            isDisabled={mnu.menuId ? false : true}
                             onChange={(e) => handleChange(e, 'menu', index)}
                           />
                         </Box>
                         <Text>PHP</Text>
                         <Button
+                          isDisabled={mnu.menuId ? false : true}
+                          onClick={() => {
+                            const menu = [...menus]
+                            menu[index].price = mnu.defaultPrice
+                            setMenus(menu)
+                          }}
                           display='block'
                           padding='0 30px'
                           fontSize='11px'
@@ -258,6 +356,8 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
                         width='100%'
                         name='discount'
                         type="number"
+                        value={mnu.discount}
+                        isDisabled={mnu.menuId ? false : true}
                         onChange={(e) => handleChange(e, 'menu', index)}
                       />
                     </Box>
@@ -298,7 +398,15 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
           ))}
         </Flex>
         <AddBtn
-          onClick={() => setMenus(prev => [...prev, { menuId: null, price: 0, menuEmployeeId: null, discount: 0, total: 0 }])}
+          onClick={() => setMenus(prev => [...prev, {
+            menuId: null,
+            price: 0,
+            menuEmployeeId: null,
+            discount: 0,
+            total: 0,
+            defaultPrice: 0,
+            type: 'Menu'
+          }])}
         />
       </SectionLabel>
 
@@ -308,7 +416,7 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
         label='店販商品'
       >
         <Flex flexDirection='column' rowGap='20px'>
-          {products.map((product, index) => (
+          {products.map((prodct, index) => (
             <Box
               key={index}
               border='1px solid'
@@ -345,7 +453,8 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
                               width='100%'
                               name='quantity'
                               type="number"
-                              value={product.quantity}
+                              value={prodct.quantity}
+                              isDisabled={prodct.productId ? false : true}
                               onChange={(e) => handleChange(e, 'product', index)}
                             />
                           </Box>
@@ -360,12 +469,19 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
                             width='100%'
                             name='price'
                             type="number"
-                            value={product.price}
+                            value={prodct.price}
+                            isDisabled={prodct.productId ? false : true}
                             onChange={(e) => handleChange(e, 'product', index)}
                           />
                         </Box>
                         <Text>PHP</Text>
                         <Button
+                          isDisabled={prodct.productId ? false : true}
+                          onClick={() => {
+                            const product = [...products]
+                            product[index].price = prodct.defaultPrice
+                            setProducts(product)
+                          }}
                           display='block'
                           padding='0 30px'
                           fontSize='11px'
@@ -384,6 +500,8 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
                         width='100%'
                         name='discount'
                         type="number"
+                        value={prodct.discount}
+                        isDisabled={prodct.productId ? false : true}
                         onChange={(e) => handleChange(e, 'product', index)}
                       />
                     </Box>
@@ -403,7 +521,7 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
                     <RadioGroup
                       name="productsIncharge"
                       onChange={(val) => handleRadioChange(val, 'product', index)}
-                      value={parseInt(product.productEmployeeId)}
+                      value={parseInt(prodct.productEmployeeId)}
                     >
                       <Flex direction="row" flexWrap='wrap' gap='10px'>
                         {employees.map(staff => (
@@ -424,7 +542,16 @@ export const OrderContent = ({ paymentMethods, customers, productList, menuList 
           ))}
         </Flex>
         <AddBtn
-          onClick={() => setProducts(prev => [...prev, { productId: null, price: 0, productEmployeeId: null, quantity: 1, discount: 0, total: 0 }])}
+          onClick={() => setProducts(prev => [...prev, {
+            productId: null,
+            price: 0,
+            productEmployeeId: null,
+            quantity: 1,
+            discount: 0,
+            total: 0,
+            defaultPrice: 0,
+            type: 'Product'
+          }])}
         />
       </SectionLabel>
 

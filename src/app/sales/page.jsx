@@ -1,8 +1,11 @@
 import React from 'react'
+import { SalesContent } from '@/sections/SalesContent'
+import { getEmployees } from '@/lib/employee'
 
-const Sales = () => {
+const Sales = async () => {
+  const employeeList = await getEmployees()
   return (
-    <div>Sales</div>
+    <SalesContent employeeList={employeeList} />
   )
 }
 

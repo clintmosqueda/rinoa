@@ -53,10 +53,10 @@ model order_products {
   id          Int       @id @default(autoincrement())
   order_id    Int
   product_id  Int
-  quantity    Int
+  quantity    Int?
   price       Float     @db.Float
   discount    Float?    @db.Float
-  total       Float     @db.Float
+  type        String?   @db.VarChar(45)
   created_at  DateTime  @default(now()) @map("created_at")
   updated_at  DateTime  @updatedAt @map("updated_at")
   employee_id Int

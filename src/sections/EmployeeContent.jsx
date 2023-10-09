@@ -19,7 +19,6 @@ export const EmployeeContent = ({ data }) => {
       router.refresh()
       console.log('the product has been deleted')
     }
-
   }
 
   const tableHeading = [

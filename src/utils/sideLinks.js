@@ -25,10 +25,10 @@ export const links = [
     id: 3,
     menu: '売り上げ',
     menuItems: [
-      {      
+      {
         text: '売り上げ確認',
         icon: 'login',
-        path: '/customers'
+        path: '/sales'
       }
     ]
   },
@@ -59,7 +59,7 @@ export const links = [
       {
         text: '店舗利益',
         icon: 'user',
-        path: '/sales'
+        path: '/profit'
       },
     ]
   },
