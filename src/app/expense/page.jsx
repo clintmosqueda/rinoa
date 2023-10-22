@@ -8,7 +8,7 @@ const Expense = async () => {
   const employees = await getEmployees()
 
   return (
-    <ExpenseContent data={expenses} employees={employees} />
+    <ExpenseContent data={expenses || []} employees={employees || []} />
   )
 }
 

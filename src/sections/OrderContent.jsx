@@ -9,7 +9,7 @@ import { CustomRadio } from "@/components/CustomRadio";
 import { addOrder } from "@/lib/order";
 import Select from 'react-select'
 import { useRouter } from "next/navigation";
-
+import { useToast } from '@chakra-ui/react'
 
 const inputStyle = () => ({
   // backgroundColor: 'red'
@@ -50,6 +50,7 @@ export const OrderContent = ({
   menuList,
   employees
 }) => {
+  const toast = useToast()
   const router = useRouter()
   const [menus, setMenus] = useState([{
     menuId: null,
@@ -179,7 +180,8 @@ export const OrderContent = ({
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
+
     const menuData = menus.map(menu => {
       return {
         product_id: parseInt(menu.menuId),
@@ -211,9 +213,9 @@ export const OrderContent = ({
       },
       order_products: orderProducts
     }
-    console.log('data', data)
     addOrder(data)
-    // router.refresh()
+    location.reload();
+
   }
 
   return (

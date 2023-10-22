@@ -24,7 +24,10 @@ export const EmployeeForm = ({ isUpdate = false, data }) => {
     if (data) {
       reset({
         name: data.name,
-        price: data.price
+        phone: data.phone,
+        address: data.address,
+        position: data.position,
+        salary: data.salary,
       })
     }
   }, [data])
@@ -35,7 +38,10 @@ export const EmployeeForm = ({ isUpdate = false, data }) => {
     router.refresh()
     reset({
       name: '',
-      price: ''
+      price: '',
+      address: '',
+      position: '',
+      salary: '',
     })
   }
 
@@ -46,7 +52,10 @@ export const EmployeeForm = ({ isUpdate = false, data }) => {
     router.refresh()
     reset({
       name: '',
-      price: ''
+      phone: '',
+      address: '',
+      position: '',
+      salary: '',
     })
 
   }
@@ -70,7 +79,7 @@ export const EmployeeForm = ({ isUpdate = false, data }) => {
     >
       <Flex direction='column' gap='36px 0'>
         <FormRowInput
-          label='メニュー'
+          label='Name'
           error={!!errors?.name}
         >
           <Input
@@ -86,27 +95,67 @@ export const EmployeeForm = ({ isUpdate = false, data }) => {
           />
         </FormRowInput>
         <FormRowInput
-          label='価格'
-          error={!!errors?.price}
+          label='Phone'
+          error={!!errors?.phone}
         >
-          <Flex alignItems='center' gap='0 15px'>
-            <Box>
-              <Input
-                type="number"
-                borderColor="brand.lighterGray"
-                {...register('price', {
-                  validate: {
-                    required: (val) => {
-                      let notEmpty = val?.trim().length > 0
-                      return notEmpty
-                    },
-                  },
-                })}
-              />
-            </Box>
-            <Text>PHP</Text>
-          </Flex>
+          <Input
+            borderColor="brand.lighterGray"
+            {...register('phone', {
+              validate: {
+                required: (val) => {
+                  let notEmpty = val?.trim().length > 0
+                  return notEmpty
+                },
+              },
+            })}
+          />
         </FormRowInput>
+        <FormRowInput
+          label='Address'
+          error={!!errors?.address}
+        >
+          <Input
+            borderColor="brand.lighterGray"
+            {...register('address', {
+              validate: {
+                required: (val) => {
+                  let notEmpty = val?.trim().length > 0
+                  return notEmpty
+                },
+              },
+            })}
+          />
+        </FormRowInput>
+        <FormRowInput
+          label='Position'
+          error={!!errors?.position}
+        >
+          <Input
+            borderColor="brand.lighterGray"
+            {...register('position', {
+              validate: {
+                required: (val) => {
+                  let notEmpty = val?.trim().length > 0
+                  return notEmpty
+                },
+              },
+            })}
+          />
+        </FormRowInput>
+        <FormRowInput
+          label='Salary'
+          error={!!errors?.salary}
+        >
+          <Input
+            type="number"
+            borderColor="brand.lighterGray"
+            {...register('salary', {
+              valueAsNumber: true,
+              validate: (value) => value > 0
+            })}
+          />
+        </FormRowInput>
+
 
         <Box width='100%'>
           <Button

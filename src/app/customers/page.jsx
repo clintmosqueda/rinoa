@@ -5,7 +5,7 @@ import React from 'react'
 const Customers = async () => {
   const customers = await getCustomers()
   return (
-    <CustomersContent data={customers} />
+    <CustomersContent data={customers || []} />
   )
 }
 

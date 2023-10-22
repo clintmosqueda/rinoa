@@ -1,13 +1,13 @@
 'use client'
 import { Box, Text, Flex } from '@chakra-ui/react'
 
-export const FormRowInput = ({ error, message, label, children }) => {
+export const FormRowInput = ({ error, message, label, children, labelStyle }) => {
   return (
     <Flex
       alignItems='center'
       gap="0 0"
       width='100%'>
-      <Box flexShrink='0' minW='145px'>
+      <Box flexShrink='0' minW='145px' {...labelStyle}>
         <Text
           fontSize='27px'
           fontWeight='bold'

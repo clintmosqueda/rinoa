@@ -5,7 +5,7 @@ import { getPaymentMethod } from "@/lib/paymentMethod"
 const PaymentMethod = async () => {
   const paymentMethod = await getPaymentMethod()
   return (
-    <PaymentMethodContent data={paymentMethod} />
+    <PaymentMethodContent data={paymentMethod || []} />
   )
 }
 

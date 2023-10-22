@@ -10,6 +10,7 @@ import { ymdFormat } from "@/utils/timeHelper"
 
 export const ExpenseContent = ({ data, employees }) => {
   const router = useRouter()
+  const employeeExpense = data.filter(f => f.type === 'employee')
 
   const handleDelete = async (id) => {
 
@@ -115,7 +116,7 @@ export const ExpenseContent = ({ data, employees }) => {
       <PageTitle title='メニュー情報管理' />
       <Table
         tableHeading={tableHeading}
-        tableData={data} />
+        tableData={employeeExpense} />
       <Box>
         <ExpenseForm />
       </Box>

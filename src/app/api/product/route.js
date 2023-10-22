@@ -5,10 +5,13 @@ export const GET = async () => {
   try {
     const products = await prisma.products.findMany({
       where: {
-        type: "Product",
+        type: "product",
       },
     });
-    return new NextResponse(JSON.stringify(products), { status: 200 });
+    return new NextResponse(
+      JSON.stringify(products)
+      , { status: 200 }
+    );
   } catch (error) {
     console.log("error", error);
     return new NextResponse(

@@ -1,17 +1,18 @@
 'use client'
 
 import { Modal } from "./Modal"
-import { Button, Icon, Box, Text, Flex, Input, useDisclosure } from '@chakra-ui/react'
+import { Button, Box, Text, Flex, Input, useDisclosure, RadioGroup } from '@chakra-ui/react'
 import { AddBtn } from "@/components/AddBtn"
 import { FormRowInput } from "../FormRowInput";
 import { useForm } from 'react-hook-form'
-import { addPaymentMethod, updatePaymentMethod } from "@/lib/paymentMethod";
+import { addExpense, updateExpense } from "@/lib/expense";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const PaymentMethodForm = ({ isUpdate = false, data }) => {
+export const ProfitForm = ({ isUpdate = false, data }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
+
   const {
     register,
     handleSubmit,
@@ -22,32 +23,50 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
 
   useEffect(() => {
     if (data) {
+      console.log('data', data)
       reset({
         name: data.name,
-        interest: data.interest
+        cost: data.cost,
+        description: data.description
       })
     }
   }, [data])
 
   const submitAdd = async (formData) => {
-    addPaymentMethod(formData)
+    const data = {
+      name: formData.name,
+      description: formData.description,
+      cost: parseFloat(formData.cost),
+      type: 'admin'
+    }
+    addExpense(data)
     onClose()
     router.refresh()
     reset({
       name: '',
-      interest: ''
+      cost: '',
+      description: '',
     })
   }
 
-  const submitUpdate = async (formData) => {
-    updatePaymentMethod(data.id, formData)
+  const submitUpdate = async (inputs) => {
+    console.log('inputs', inputs)
+    const formData = {
+      id: data.id,
+      name: inputs.name,
+      description: inputs.description,
+      cost: parseFloat(inputs.cost),
+      type: 'admin'
+    }
+
+    updateExpense(formData)
     onClose()
     router.refresh()
     reset({
       name: '',
-      interest: ''
+      cost: '',
+      description: '',
     })
-
   }
 
   const UpdateBtn = () => (
@@ -61,7 +80,7 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
 
   return (
     <Modal
-      heading='支払い方法登録'
+      heading='経費入力'
       isOpen={isOpen}
       onOpen={onOpen}
       onClose={onClose}
@@ -69,11 +88,8 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
     >
       <Flex direction='column' gap='36px 0'>
         <FormRowInput
-          label='支払い方法名'
+          label='経費名'
           error={!!errors?.name}
-          labelStyle={{
-            minW: '190px'
-          }}
         >
           <Input
             borderColor="brand.lighterGray"
@@ -89,28 +105,37 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
         </FormRowInput>
 
         <FormRowInput
-          label='手数料'
-          error={!!errors?.interest}
-          labelStyle={{
-            minW: '190px'
-          }}
+          label='詳細'
+          error={!!errors?.description}
+        >
+          <Input
+            borderColor="brand.lighterGray"
+            {...register('description')}
+          />
+        </FormRowInput>
+
+        <FormRowInput
+          label='価格'
+          error={!!errors?.cost}
         >
           <Flex alignItems='center' gap='0 15px'>
             <Box>
               <Input
                 type="number"
                 borderColor="brand.lighterGray"
-                {...register('interest', {
-                  validate: {
-                    required: (val) => {
-                      let notEmpty = val?.trim().length > 0
-                      return notEmpty
-                    },
-                  },
+                {...register('cost', {
+                  required: true
+                  // validate: {
+                  //   required: (val) => {
+                  //     console.log('val cost', val)
+                  //     let notEmpty = val?.trim().length > 0
+                  //     return notEmpty
+                  //   },
+                  // },
                 })}
               />
             </Box>
-            <Text>%</Text>
+            <Text>PHP</Text>
           </Flex>
         </FormRowInput>
 

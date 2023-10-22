@@ -16,6 +16,7 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [employeeId, setEmployeeId] = useState(null)
+  const [employeeError, setEmployeeError] = useState(false)
 
   const {
     register,
@@ -27,7 +28,6 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
 
   useEffect(() => {
     if (data) {
-      console.log('data', data)
       reset({
         name: data.name,
         cost: data.cost,
@@ -38,11 +38,16 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
   }, [data])
 
   const submitAdd = async (formData) => {
+    if (!formData.employeeId) {
+      setEmployeeError(true)
+      return
+    }
     const data = {
       name: formData.name,
       description: formData.description,
       cost: parseFloat(formData.cost),
-      employeeId: parseInt(employeeId)
+      employeeId: parseInt(employeeId),
+      type: 'employee'
     }
     addExpense(data)
     onClose()
@@ -56,13 +61,13 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
   }
 
   const submitUpdate = async (inputs) => {
-    console.log('inputs', inputs)
     const formData = {
       id: data.id,
       name: inputs.name,
       description: inputs.description,
       cost: parseFloat(inputs.cost),
-      employeeId: employeeId
+      employeeId: parseInt(employeeId),
+      type: 'employee'
     }
 
     updateExpense(formData)
@@ -108,7 +113,6 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
             {...register('name', {
               validate: {
                 required: (val) => {
-                  console.log('val name', val)
                   let notEmpty = val?.trim().length > 0
                   return notEmpty
                 },
@@ -154,7 +158,7 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
 
         <FormRowInput
           label='担当者'
-          error={!!errors?.employeeIncharge}
+          error={!!employeeError}
         >
           <RadioGroup name="employeeIncharge" onChange={(val) => handleRadioChange(val)} value={parseInt(employeeId)}>
             <Flex direction="row" flexWrap='wrap' gap='10px'>

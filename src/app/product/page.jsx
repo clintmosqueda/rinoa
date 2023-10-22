@@ -4,7 +4,7 @@ import { ProductContent } from "@/sections/ProductContent"
 const Product = async () => {
   const product = await getProduct()
   return (
-    <ProductContent data={product} />
+    <ProductContent data={product || []} />
   )
 }
 

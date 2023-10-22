@@ -24,13 +24,18 @@ export const MenuForm = ({ isUpdate = false, data }) => {
     if (data) {
       reset({
         name: data.name,
-        price: data.price
+        price: data.price,
       })
     }
   }, [data])
 
   const submitAdd = async (formData) => {
-    addMenu(formData)
+    const data = {
+      name: formData.name,
+      price: parseFloat(formData.price),
+      type: 'menu'
+    }
+    addMenu(data)
     onClose()
     router.refresh()
     reset({
@@ -40,7 +45,12 @@ export const MenuForm = ({ isUpdate = false, data }) => {
   }
 
   const submitUpdate = async (formData) => {
-    updateMenu(data.id, formData)
+    const productData = {
+      name: formData.name,
+      price: parseFloat(formData.price),
+      type: 'menu'
+    }
+    updateMenu(data.id, productData)
     onClose()
     router.refresh()
     reset({
@@ -94,12 +104,13 @@ export const MenuForm = ({ isUpdate = false, data }) => {
                 type="number"
                 borderColor="brand.lighterGray"
                 {...register('price', {
-                  validate: {
-                    required: (val) => {
-                      let notEmpty = val?.trim().length > 0
-                      return notEmpty
-                    },
-                  },
+                  required: true,
+                  // validate: {
+                  //   required: (val) => {
+                  //     let notEmpty = val?.trim().length > 0
+                  //     return notEmpty
+                  //   },
+                  // },
                 })}
               />
             </Box>

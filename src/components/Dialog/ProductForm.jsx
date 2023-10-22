@@ -32,11 +32,13 @@ export const ProductForm = ({ isUpdate = false, data }) => {
   const submitAdd = async (formData) => {
     const data = {
       name: formData.name,
-      price: parseFloat(formData.price)
+      price: parseFloat(formData.price),
+      type: 'product'
     }
     addProduct(data)
     onClose()
-    getProduct()
+    router.refresh()
+    // getProduct()
     reset({
       name: '',
       price: ''
@@ -44,8 +46,12 @@ export const ProductForm = ({ isUpdate = false, data }) => {
   }
 
   const submitUpdate = async (formData) => {
-    console.log('formData', formData)
-    updateProduct(data.id, formData)
+    const productData = {
+      name: formData.name,
+      price: parseFloat(formData.price),
+      type: 'product'
+    }
+    updateProduct(data.id, productData)
     onClose()
     router.refresh()
     reset({
@@ -99,12 +105,13 @@ export const ProductForm = ({ isUpdate = false, data }) => {
                 type="number"
                 borderColor="brand.lighterGray"
                 {...register('price', {
-                  validate: {
-                    required: (val) => {
-                      let notEmpty = val?.trim().length > 0
-                      return notEmpty
-                    },
-                  },
+                  required: true
+                  // validate: {
+                  //   required: (val) => {
+                  //     let notEmpty = val?.trim().length > 0
+                  //     return notEmpty
+                  //   },
+                  // },
                 })}
               />
             </Box>

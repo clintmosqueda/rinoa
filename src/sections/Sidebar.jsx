@@ -17,6 +17,7 @@ export const Sidebar = () => {
       >
         <Box position='relative' w='139px' h='50px'>
           <Image
+            priority
             fill
             sizes='139px'
             src='/images/logo.png'

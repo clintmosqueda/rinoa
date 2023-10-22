@@ -4,7 +4,7 @@ import { MenuContent } from "@/sections/MenuContent"
 const Menu = async () => {
   const menus = await getMenu()
   return (
-    <MenuContent data={menus} />
+    <MenuContent data={menus || []} />
   )
 }
 

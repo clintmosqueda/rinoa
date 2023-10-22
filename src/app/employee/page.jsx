@@ -4,7 +4,7 @@ import { getEmployees } from '@/lib/employee'
 const Employee = async () => {
   const employees = await getEmployees()
   return (
-    <EmployeeContent data={employees} />
+    <EmployeeContent data={employees || []} />
   )
 }
 

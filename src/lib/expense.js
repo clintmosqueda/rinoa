@@ -7,35 +7,36 @@ export const getExpenses = async () => {
   }
 }
 
-export const addExpense = async(formData) => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/expense`, {
-        method: 'POST',
-        body: JSON.stringify({
-          name: formData.name,
-          description: formData.description,
-          cost: formData.cost,
-          employee_id: formData.employeeId,
-        })
+export const addExpense = async (formData) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/expense`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: formData.name,
+        description: formData.description,
+        cost: formData.cost,
+        employee_id: formData.employeeId,
+        type: formData.type
       })
-      const data = await res.json()
+    })
+    const data = await res.json()
 
-    } catch (error) {
-      console.log('error', error)
-    }
+  } catch (error) {
+    console.log('error', error)
+  }
 }
 
-export const deleteExpense = async(id) => {
+export const deleteExpense = async (id) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/expense/${id}`, {
     method: 'DELETE'
   })
 
-  if(res.status === 200) {
+  if (res.status === 200) {
     console.log('Expense has been deleted')
   }
 }
 
-export const updateExpense = async(formData) => {
+export const updateExpense = async (formData) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/expense/${formData.id}`, {
     method: 'PUT',
     body: JSON.stringify({
@@ -46,7 +47,7 @@ export const updateExpense = async(formData) => {
     })
   })
 
-  if(res.status === 200) {
+  if (res.status === 200) {
     console.log('Expense has been Updated')
   }
 }

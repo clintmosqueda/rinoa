@@ -48,9 +48,9 @@ export const Table = ({ tableHeading = [], tableData = [] }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {tableData.map(row => {
+            {tableData.map((row, index) => {
               return (
-                <Tr key={row.id}>
+                <Tr key={index}>
                   {tableHeading.map(col => {
                     return (
                       <Td
@@ -59,9 +59,9 @@ export const Table = ({ tableHeading = [], tableData = [] }) => {
                         key={col.accessor}
                       >
                         {col.render ? (
-                          col.render(row)
+                          col.render(row, index)
                         ) : (
-                          <Text>{row[col.accessor]}</Text>
+                          <Text textTransform='capitalize'>{row[col.accessor]}</Text>
                         )}
 
                       </Td>

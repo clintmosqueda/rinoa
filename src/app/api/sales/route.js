@@ -10,8 +10,6 @@ export const GET = async (req, { searchParams }) => {
 
   const firstDay = `${currentYear}-${month}-01`
   const lastDay = (new Date(currentYear, month, 0)).toISOString().split('T')[0]
-  console.log('firstDay', new Date(firstDay))
-  console.log('lastDay', new Date(lastDay))
 
   try {
     let orderProducts
