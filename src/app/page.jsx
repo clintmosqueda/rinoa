@@ -17,6 +17,7 @@ const Home = async () => {
       name: employee.name
     }
   })
+
   const customers = customerData.map(customer => {
     return {
       name: customer.name,

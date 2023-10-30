@@ -11,13 +11,13 @@ model customers {
   id          Int       @id @default(autoincrement())
   name        String    @db.VarChar(45)
   gender      String?   @db.VarChar(10)
-  phone       String    @unique(map: "phoneNumber_UNIQUE") @db.VarChar(20)
-  age         Int?
-  birthdate   DateTime? @db.DateTime(0)
+  phone       String?   @unique(map: "phoneNumber_UNIQUE") @db.VarChar(20)
+  age         String?   @db.VarChar(10)
+  birthdate   String?   @db.VarChar(10)
   nationality String?   @db.VarChar(45)
   occupation  String?   @db.VarChar(45)
-  created_at  DateTime  @default(now()) @map("created_at")
-  updated_at  DateTime  @updatedAt @map("updated_at")
+  created_at  DateTime? @default(now()) @map("created_at")
+  updated_at  DateTime? @updatedAt @map("updated_at")
   orders      orders[]
 }
 
@@ -41,10 +41,10 @@ model expenses {
   name        String     @unique(map: "name_UNIQUE") @db.VarChar(45)
   description String?    @db.Text
   cost        Float      @db.Float
-  type        String     @db.VarChar(45)
   created_at  DateTime   @default(now()) @map("created_at")
   updated_at  DateTime   @updatedAt @map("updated_at")
   employee_id Int?
+  type        String     @db.VarChar(45)
   employees   employees? @relation(fields: [employee_id], references: [id], onDelete: Cascade, map: "fk_expense_employees1")
 
   @@index([employee_id], map: "fk_expense_employees1_idx")
@@ -105,4 +105,12 @@ model products {
   created_at     DateTime         @default(now()) @map("created_at")
   updated_at     DateTime         @updatedAt @map("updated_at")
   order_products order_products[]
+}
+
+model user {
+  id         Int      @id @default(autoincrement())
+  user       String   @db.VarChar(45)
+  password   String   @db.VarChar(45)
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
 }

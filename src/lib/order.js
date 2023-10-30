@@ -13,7 +13,8 @@ export const addOrder = async (formData) => {
       method: "POST",
       body: JSON.stringify(formData),
     });
-    const data = await res.json();
+    return await res.json({ message: 'success' });
+
     console.log("data", data);
   } catch (error) {
     console.log("error", error);

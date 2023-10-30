@@ -60,10 +60,8 @@ export const POST = async (req) => {
       },
     })
 
-
     return new NextResponse(
-      // JSON.stringify(orderProducts),
-      JSON.stringify(orderData),
+      JSON.stringify({ message: 'success' }),
       { status: 201 }
     )
   } catch (error) {
