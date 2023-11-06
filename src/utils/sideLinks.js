@@ -32,34 +32,38 @@ export const links = [
       }
     ]
   },
+]
+
+export const adminLinks = [
   {
-    id: 4,
+    id: 1,
     menu: '管理者メニュー',
+    role: 'admin',
     menuItems: [
       {
         text: '従業員登録',
         icon: 'user',
-        path: '/employee'
+        path: '/employee',
       },
       {
         text: '技術メニュー登録',
         icon: 'user',
-        path: '/menu'
+        path: '/menu',
       },
       {
         text: '店販商品登録',
         icon: 'user',
-        path: '/product'
+        path: '/product',
       },
       {
         text: '支払い方法登録',
         icon: 'user',
-        path: '/payment-method'
+        path: '/payment-method',
       },
       {
         text: '店舗利益',
         icon: 'user',
-        path: '/profit'
+        path: '/profit',
       },
     ]
   },

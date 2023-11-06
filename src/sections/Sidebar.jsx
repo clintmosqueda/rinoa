@@ -1,14 +1,20 @@
 'use client'
 import { Menu, MenuItem } from "@/components/Menu"
-import { Box, Flex, VStack } from "@chakra-ui/react"
+import { Box, Flex, VStack, Icon, Text } from "@chakra-ui/react"
 import Image from "next/image"
 import { usePathname } from 'next/navigation'
-import { links } from '@/utils/sideLinks'
+import { links, adminLinks } from '@/utils/sideLinks'
 import Link from "next/link"
-
+import { TbLayoutDashboard } from 'react-icons/tb'
+import { useSession, signOut } from "next-auth/react"
 
 export const Sidebar = () => {
   const pathname = usePathname()
+  const { status } = useSession()
+
+  const handleLogout = async () => {
+    await signOut()
+  }
   return (
     <Flex flexDirection='column' gap='37px 0'>
 
@@ -42,6 +48,31 @@ export const Sidebar = () => {
             ))}
           </Menu>
         ))}
+        {status === 'authenticated' && adminLinks.map((link, index) => (
+          <Menu key={`${link.id}-${index}`} text={link.menu}>
+            {link.menuItems.map((item, index) => (
+              <MenuItem
+                key={index + 20}
+                active={pathname === item.path ? true : false}
+                text={item.text}
+                menuIcon={item.icon}
+                link={item.path} />
+            ))}
+          </Menu>
+        ))}
+        {status === 'authenticated' && (
+          <Flex
+            cursor='pointer'
+            alignItems='center'
+            padding='10px'
+            gap='0 15px'
+            onClick={handleLogout}
+          >
+            <Icon fontSize='18px' as={TbLayoutDashboard} />
+            <Text fontSize='14px'>Logout</Text>
+          </Flex>
+        )}
+
       </Flex>
     </Flex >
   )

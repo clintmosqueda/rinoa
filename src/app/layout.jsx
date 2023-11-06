@@ -2,6 +2,7 @@ import { ValueProvider } from '@/context/ValueContext'
 import './globals.css'
 import { ChakraProviders } from './providers'
 import { Wrapper } from '@/components/Wrapper'
+import { AuthProvider } from '@/components/AuthProvider'
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -14,13 +15,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <ValueProvider>
-          <ChakraProviders>
-            <Wrapper>
-              {children}
-            </Wrapper>
-          </ChakraProviders>
-        </ValueProvider>
+        <AuthProvider>
+          <ValueProvider>
+            <ChakraProviders>
+              <Wrapper>
+                {children}
+              </Wrapper>
+            </ChakraProviders>
+          </ValueProvider>
+        </AuthProvider>
       </body>
     </html>
   )

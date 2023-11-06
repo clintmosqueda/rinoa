@@ -1,10 +1,13 @@
+import { PageGuard } from "@/components/PageGuard"
 import { getProduct } from "@/lib/product"
 import { ProductContent } from "@/sections/ProductContent"
 
 const Product = async () => {
   const product = await getProduct()
   return (
-    <ProductContent data={product || []} />
+    <PageGuard>
+      <ProductContent data={product || []} />
+    </PageGuard>
   )
 }
 
