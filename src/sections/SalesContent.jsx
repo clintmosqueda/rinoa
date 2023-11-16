@@ -77,7 +77,7 @@ export const SalesContent = ({ employeeList }) => {
 
   return (
     <Box>
-      <PageTitle title='売り上げ一覧' />
+      <PageTitle title='売り上げ確認' />
       <Box>
         <SaleRow
           label='期間選択'

@@ -1,5 +1,5 @@
 'use client'
-import { Box, Icon, Text, Flex } from "@chakra-ui/react"
+import { Box, Icon, Text, Flex, useToast } from "@chakra-ui/react"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
 import { TbDots } from 'react-icons/tb'
@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation"
 import { PaymentMethodForm } from "@/components/Dialog/PaymentMethodForm"
 import { useEffect, useState } from "react"
 
-export const PaymentMethodContent = ({ data }) => {
+export const PaymentMethodContent = () => {
+  const toast = useToast()
   const router = useRouter()
   const [payments, setPayments] = useState([])
 
@@ -31,8 +32,14 @@ export const PaymentMethodContent = ({ data }) => {
     })
 
     if (res.status === 200) {
-      router.refresh()
-      console.log('the product has been deleted')
+      handleRefresh()
+      toast({
+        title: "Payment Method Deleted",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
   }
 

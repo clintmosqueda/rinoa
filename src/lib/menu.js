@@ -17,6 +17,7 @@ export const addMenu = async (formData) => {
         type: formData.type,
       })
     })
+    return res
     const data = await res.json()
 
   } catch (error) {

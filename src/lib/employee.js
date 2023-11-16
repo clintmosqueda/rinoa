@@ -19,6 +19,7 @@ export const addEmployee = async (formData) => {
         salary: parseFloat(formData.salary),
       })
     })
+    return res
     const data = await res.json()
 
   } catch (error) {

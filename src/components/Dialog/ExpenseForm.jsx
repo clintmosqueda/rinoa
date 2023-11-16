@@ -1,7 +1,7 @@
 'use client'
 
 import { Modal } from "./Modal"
-import { Button, Box, Text, Flex, Input, useDisclosure, RadioGroup } from '@chakra-ui/react'
+import { Button, Box, Text, Flex, Input, useDisclosure, RadioGroup, useToast } from '@chakra-ui/react'
 import { AddBtn } from "@/components/AddBtn"
 import { FormRowInput } from "../FormRowInput";
 import { useForm } from 'react-hook-form'
@@ -12,6 +12,7 @@ import { ValueContext } from '@/context/ValueContext'
 import { CustomRadio } from "../CustomRadio";
 
 export const ExpenseForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
+  const toast = useToast()
   const { employees } = useContext(ValueContext)
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -50,7 +51,6 @@ export const ExpenseForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
       employeeId: parseInt(employeeId),
       type: 'employee'
     }
-    console.log('data form', data)
     const res = await addExpense(data)
     if (res.status === 201) {
       onClose()
@@ -61,6 +61,13 @@ export const ExpenseForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
         description: '',
       })
       setEmployeeId(null)
+      toast({
+        title: "Added New Expenses",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
 
   }
@@ -85,6 +92,13 @@ export const ExpenseForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
         description: '',
       })
       setEmployeeId(null)
+      toast({
+        title: "Updated Expense",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
   }
 

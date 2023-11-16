@@ -1,7 +1,7 @@
 'use client'
 
 import { Modal } from "./Modal"
-import { Button, Icon, Box, Text, Flex, Input, useDisclosure } from '@chakra-ui/react'
+import { Button, Icon, Box, Text, Flex, Input, useDisclosure, useToast } from '@chakra-ui/react'
 import { AddBtn } from "@/components/AddBtn"
 import { FormRowInput } from "../FormRowInput";
 import { useForm } from 'react-hook-form'
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export const MenuForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
+  const toast = useToast()
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -35,13 +36,24 @@ export const MenuForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
       price: parseFloat(formData.price),
       type: 'menu'
     }
-    addMenu(data)
-    onClose()
-    handleRefresh()
-    reset({
-      name: '',
-      price: ''
-    })
+
+    const res = await addMenu(data)
+    if (res.status === 201) {
+      onClose()
+      handleRefresh()
+      reset({
+        name: '',
+        price: ''
+      })
+      toast({
+        title: "Added New Menu",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
+    }
+
   }
 
   const submitUpdate = async (formData) => {
@@ -57,6 +69,13 @@ export const MenuForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
       reset({
         name: '',
         price: ''
+      })
+      toast({
+        title: "Updated Menu",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
       })
     }
   }

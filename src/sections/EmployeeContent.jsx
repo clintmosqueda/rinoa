@@ -2,12 +2,13 @@
 import { EmployeeForm } from "@/components/Dialog/EmployeeForm"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
-import { Box, Icon, Text, Flex } from "@chakra-ui/react"
+import { Box, Icon, Text, Flex, useToast } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export const EmployeeContent = () => {
+  const toast = useToast()
   const router = useRouter()
   const [employees, setEmployees] = useState([])
 
@@ -32,11 +33,16 @@ export const EmployeeContent = () => {
 
     if (res.status === 200) {
       handleGetEmployees()
-      console.log('the product has been deleted')
+      toast({
+        title: "Employee has been deleted",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
   }
   const handleRefresh = async () => {
-    console.log('handleRefresh');
     await handleGetEmployees()
   }
 
@@ -119,7 +125,7 @@ export const EmployeeContent = () => {
 
   return (
     <Box>
-      <PageTitle title='メニュー情報管理' />
+      <PageTitle title='従業員登録' />
       <Table
         tableHeading={tableHeading}
         tableData={employees || []} />

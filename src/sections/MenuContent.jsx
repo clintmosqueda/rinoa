@@ -2,12 +2,13 @@
 import { MenuForm } from "@/components/Dialog/MenuForm"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
-import { Box, Icon, Text, Flex } from "@chakra-ui/react"
+import { Box, Icon, Text, Flex, useToast } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useEffect, useState } from "react"
 
 export const MenuContent = () => {
   const [menu, setMenu] = useState([])
+  const toast = useToast()
 
   useEffect(() => {
     handleGetMenu()
@@ -31,7 +32,13 @@ export const MenuContent = () => {
 
     if (res.status === 200) {
       handleRefresh()
-      console.log('the product has been deleted')
+      toast({
+        title: "The Menu has been deleted",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
   }
 
@@ -103,7 +110,7 @@ export const MenuContent = () => {
 
   return (
     <Box>
-      <PageTitle title='メニュー情報管理' />
+      <PageTitle title='技術メニュー登録' />
       <Table
         tableHeading={tableHeading}
         tableData={menu} />

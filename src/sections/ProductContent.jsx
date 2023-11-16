@@ -2,12 +2,13 @@
 import { ProductForm } from "@/components/Dialog/ProductForm"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
-import { Box, Icon, Text, Flex, useDisclosure } from "@chakra-ui/react"
+import { Box, Icon, Text, Flex, useDisclosure, useToast } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export const ProductContent = ({ data }) => {
+  const toast = useToast()
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [product, setProduct] = useState([])
@@ -33,7 +34,13 @@ export const ProductContent = ({ data }) => {
 
     if (res.status === 200) {
       handleGetProduct()
-      console.log('the product has been deleted')
+      toast({
+        title: "Product has been deleted",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
   }
 
@@ -105,7 +112,7 @@ export const ProductContent = ({ data }) => {
 
   return (
     <Box>
-      <PageTitle title='メニュー情報管理' />
+      <PageTitle title='店販商品登録' />
       <Table
         tableHeading={tableHeading}
         tableData={product} />

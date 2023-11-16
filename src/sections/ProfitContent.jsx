@@ -2,12 +2,13 @@
 import { ProfitForm } from "@/components/Dialog/ProfitForm"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
-import { Box, Icon, Text, Flex } from "@chakra-ui/react"
+import { Box, Icon, Text, Flex, useToast } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export const ProfitContent = () => {
+  const toast = useToast()
   const router = useRouter()
   const [profit, setProfit] = useState()
   const [allExpense, setAllExpense] = useState([])
@@ -68,7 +69,13 @@ export const ProfitContent = () => {
 
     if (res.status === 200) {
       handleRefresh()
-      console.log('Item has been deleted')
+      toast({
+        title: "Item has been deleted",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
   }
 

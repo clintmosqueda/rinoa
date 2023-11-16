@@ -2,6 +2,7 @@
 import { Modal } from "./Modal"
 import { TbUserPlus } from 'react-icons/tb'
 import {
+  useToast,
   Button,
   Icon,
   Box,
@@ -17,7 +18,9 @@ import { FormRowInput } from "../FormRowInput";
 import { useState } from "react";
 import { CustomRadio } from "@/components/CustomRadio";
 
+
 export const RegisterCustomer = ({ handleRefreshCustomer }) => {
+  const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [values, setValues] = useState({
     name: '',
@@ -86,6 +89,13 @@ export const RegisterCustomer = ({ handleRefreshCustomer }) => {
         body: JSON.stringify(values)
       })
       if (res.status === 201) {
+        toast({
+          title: "Customer Registration Success",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        })
         onClose()
         handleRefreshCustomer()
       } else {

@@ -1,7 +1,7 @@
 'use client'
 
 import { Modal } from "./Modal"
-import { Button, Icon, Box, Text, Flex, Input, useDisclosure } from '@chakra-ui/react'
+import { Button, Icon, Box, Text, Flex, Input, useDisclosure, useToast } from '@chakra-ui/react'
 import { AddBtn } from "@/components/AddBtn"
 import { FormRowInput } from "../FormRowInput";
 import { useForm } from 'react-hook-form'
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export const PaymentMethodForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
+  const toast = useToast()
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -38,6 +39,13 @@ export const PaymentMethodForm = ({ handleRefresh, isUpdate = false, dataRow }) 
         name: '',
         interest: ''
       })
+      toast({
+        title: "Added New Payment Method",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
   }
 
@@ -49,6 +57,13 @@ export const PaymentMethodForm = ({ handleRefresh, isUpdate = false, dataRow }) 
       reset({
         name: '',
         interest: ''
+      })
+      toast({
+        title: "Payment Method updated",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
       })
     } else {
       onClose()

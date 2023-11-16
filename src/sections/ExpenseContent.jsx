@@ -2,7 +2,7 @@
 import { ExpenseForm } from "@/components/Dialog/ExpenseForm"
 import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
-import { Box, Icon, Text, Flex } from "@chakra-ui/react"
+import { Box, Icon, Text, Flex, useToast } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 import { assignedEmployee } from "@/utils/assignedEmployee"
@@ -10,6 +10,7 @@ import { ymdFormat } from "@/utils/timeHelper"
 import { useEffect, useState } from "react"
 
 export const ExpenseContent = () => {
+  const toast = useToast()
   const router = useRouter()
   const [employeeExpenses, setExployeeExpenses] = useState([])
   const [employees, setEmployees] = useState([])
@@ -48,7 +49,13 @@ export const ExpenseContent = () => {
 
     if (res.status === 200) {
       handleRefresh()
-      console.log('Expense has been deleted')
+      toast({
+        title: "Expense has been deleted",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
   }
 
@@ -144,7 +151,7 @@ export const ExpenseContent = () => {
 
   return (
     <Box>
-      <PageTitle title='メニュー情報管理' />
+      <PageTitle title='経費入力' />
       <Table
         tableHeading={tableHeading}
         tableData={employeeExpenses} />

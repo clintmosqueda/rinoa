@@ -67,9 +67,8 @@ const initialProductState = {
 
 export const OrderContent = ({
   paymentMethods,
-  // customers,
-  productList,
-  menuList,
+  // productList,
+  // menuList,
   employees
 }) => {
   const toast = useToast()
@@ -82,6 +81,8 @@ export const OrderContent = ({
   const [accountantId, setAccountantId] = useState(null)
   const [customerId, setCustomerId] = useState(null)
   const [customers, setCustomers] = useState([])
+  const [productList, setProductList] = useState([])
+  const [menuList, setMenuList] = useState([])
   const [total, setTotal] = useState(0)
   const [error, setError] = useState({
     customerError: false,
@@ -94,23 +95,36 @@ export const OrderContent = ({
   })
 
   useEffect(() => {
-    handleGetCustomer()
+    handleGetList()
   }, [])
 
-  const handleGetCustomer = async () => {
-    try {
-      const res = await fetch(`/api/customer`)
-      const data = await res.json()
-      setCustomers(data)
-    } catch (error) {
-      console.log('error', error)
-    }
+  const handleGetList = async () => {
+    Promise.all([
+      fetch(`/api/customer`),
+      fetch(`/api/menu`),
+      fetch(`/api/product`),
+    ])
+      .then(async ([getCustomer, getMenu, getProduct]) => {
+        const customers = await getCustomer.json()
+        const menu = await getMenu.json()
+        const product = await getProduct.json()
+        return {
+          customers: customers,
+          menu: menu,
+          product: product
+        }
+      })
+      .then(res => {
+        const { customers, menu, product } = res
+        setCustomers(customers)
+        setProductList(product)
+        setMenuList(menu)
+      })
   }
 
   const handleRefreshCustomer = () => {
-    handleGetCustomer()
+    handleGetList()
   }
-
 
   useEffect(() => {
     const menuSubtotal = menus.map(menu => {
@@ -195,7 +209,7 @@ export const OrderContent = ({
   const handleSelectChange = (select, type, index) => {
     switch (type) {
       case 'customer':
-        setCustomerId(select.value)
+        setCustomerId(select.id)
         setError({ ...error, customerError: false })
         break;
 
@@ -310,9 +324,13 @@ export const OrderContent = ({
           status: "success",
           duration: 3000,
           isClosable: true,
+          position: 'top',
+          onClose: () => {
+            handleReload()
+          }
         })
         setTimeout(() => {
-          location.reload();
+          handleReload()
         }, 3100);
 
       } else {
@@ -321,6 +339,9 @@ export const OrderContent = ({
     } catch (error) {
       console.log("error", error);
     }
+  }
+  const handleReload = () => {
+    location.reload();
   }
 
   const handleChangeAccountant = (val) => {

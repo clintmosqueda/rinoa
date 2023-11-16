@@ -1,7 +1,7 @@
 'use client'
 
 import { Modal } from "./Modal"
-import { Button, Box, Text, Flex, Input, useDisclosure, RadioGroup } from '@chakra-ui/react'
+import { Button, Box, Text, Flex, Input, useDisclosure, RadioGroup, useToast } from '@chakra-ui/react'
 import { AddBtn } from "@/components/AddBtn"
 import { FormRowInput } from "../FormRowInput";
 import { useForm } from 'react-hook-form'
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export const ProfitForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
+  const toast = useToast()
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -48,6 +49,13 @@ export const ProfitForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
         cost: '',
         description: '',
       })
+      toast({
+        title: "Added New Item",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      })
     }
 
   }
@@ -70,6 +78,13 @@ export const ProfitForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
         name: '',
         cost: '',
         description: '',
+      })
+      toast({
+        title: "Item has been updated",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
       })
     }
   }

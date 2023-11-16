@@ -47,7 +47,7 @@ export const MenuItem = ({ text, link = '/', active, menuIcon }) => {
       bg={active ? 'brand.purple' : ''}
       color={active ? 'brand.white' : 'inherit'}
     >
-      <Link
+      <a
         href={link}
       >
         <Flex
@@ -61,7 +61,7 @@ export const MenuItem = ({ text, link = '/', active, menuIcon }) => {
           </Text>
 
         </Flex>
-      </Link>
+      </a>
     </Box>
   )
 }
