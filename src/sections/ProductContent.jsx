@@ -5,20 +5,40 @@ import { Table } from "@/components/Table"
 import { Box, Icon, Text, Flex, useDisclosure } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export const ProductContent = ({ data }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [product, setProduct] = useState([])
+
+  useEffect(() => {
+    handleGetProduct()
+  }, [])
+
+  const handleGetProduct = async () => {
+    try {
+      const res = await fetch(`/api/product`)
+      const data = await res.json()
+      setProduct(data)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
 
   const handleDelete = async (id) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/product/${id}`, {
+    const res = await fetch(`/api/product/${id}`, {
       method: 'DELETE'
     })
 
     if (res.status === 200) {
-      router.refresh()
+      handleGetProduct()
       console.log('the product has been deleted')
     }
+  }
+
+  const handleRefresh = () => {
+    handleGetProduct()
   }
 
   const tableHeading = [
@@ -63,7 +83,7 @@ export const ProductContent = ({ data }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              <ProductForm isUpdate data={row} />
+              <ProductForm isUpdate dataRow={row} handleRefresh={handleRefresh} />
               <Box
                 h='1px'
                 w='100%'
@@ -88,9 +108,9 @@ export const ProductContent = ({ data }) => {
       <PageTitle title='メニュー情報管理' />
       <Table
         tableHeading={tableHeading}
-        tableData={data} />
+        tableData={product} />
       <Box>
-        <ProductForm />
+        <ProductForm handleRefresh={handleRefresh} />
       </Box>
     </Box>
   )

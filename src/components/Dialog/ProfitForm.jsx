@@ -9,7 +9,7 @@ import { addExpense, updateExpense } from "@/lib/expense";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const ProfitForm = ({ isUpdate = false, data }) => {
+export const ProfitForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -22,51 +22,56 @@ export const ProfitForm = ({ isUpdate = false, data }) => {
   } = useForm()
 
   useEffect(() => {
-    if (data) {
-      console.log('data', data)
+    if (dataRow) {
       reset({
-        name: data.name,
-        cost: data.cost,
-        description: data.description
+        name: dataRow.name,
+        cost: dataRow.cost,
+        description: dataRow.description
       })
     }
-  }, [data])
+  }, [dataRow])
 
   const submitAdd = async (formData) => {
+    console.log('submitAdd', submitAdd)
     const data = {
       name: formData.name,
       description: formData.description,
       cost: parseFloat(formData.cost),
       type: 'admin'
     }
-    addExpense(data)
-    onClose()
-    router.refresh()
-    reset({
-      name: '',
-      cost: '',
-      description: '',
-    })
+    const res = await addExpense(data)
+    if (res.status === 201) {
+      onClose()
+      handleRefresh()
+      reset({
+        name: '',
+        cost: '',
+        description: '',
+      })
+    }
+
   }
 
   const submitUpdate = async (inputs) => {
-    console.log('inputs', inputs)
+    console.log('submitUpdate', submitUpdate)
     const formData = {
-      id: data.id,
+      id: dataRow.id,
       name: inputs.name,
       description: inputs.description,
       cost: parseFloat(inputs.cost),
       type: 'admin'
     }
 
-    updateExpense(formData)
-    onClose()
-    router.refresh()
-    reset({
-      name: '',
-      cost: '',
-      description: '',
-    })
+    const res = await updateExpense(formData)
+    if (res.status === 200) {
+      onClose()
+      handleRefresh()
+      reset({
+        name: '',
+        cost: '',
+        description: '',
+      })
+    }
   }
 
   const UpdateBtn = () => (

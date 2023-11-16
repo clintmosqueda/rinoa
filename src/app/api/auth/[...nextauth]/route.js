@@ -12,7 +12,6 @@ const authOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, req) {
-        // const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
         if (!credentials || !credentials.username || !credentials.password) return null
 
         try {
@@ -21,7 +20,6 @@ const authOptions = {
               user: credentials.username,
             }
           })
-          console.log('user', user)
           if (user?.password === credentials.password) {
             return JSON.stringify(user)
           }

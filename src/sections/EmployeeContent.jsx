@@ -5,20 +5,39 @@ import { Table } from "@/components/Table"
 import { Box, Icon, Text, Flex } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
-export const EmployeeContent = ({ data }) => {
+export const EmployeeContent = () => {
   const router = useRouter()
+  const [employees, setEmployees] = useState([])
+
+  useEffect(() => {
+    handleGetEmployees()
+  }, [])
+
+  const handleGetEmployees = async () => {
+    try {
+      const res = await fetch(`/api/employee`)
+      const data = await res.json()
+      setEmployees(data)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
 
   const handleDelete = async (id) => {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/employee/${id}`, {
+    const res = await fetch(`/api/employee/${id}`, {
       method: 'DELETE'
     })
 
     if (res.status === 200) {
-      router.refresh()
+      handleGetEmployees()
       console.log('the product has been deleted')
     }
+  }
+  const handleRefresh = async () => {
+    console.log('handleRefresh');
+    await handleGetEmployees()
   }
 
   const tableHeading = [
@@ -37,6 +56,10 @@ export const EmployeeContent = ({ data }) => {
     {
       text: 'position',
       accessor: 'position',
+    },
+    {
+      text: 'salary',
+      accessor: 'salary',
     },
     {
       text: '',
@@ -71,7 +94,10 @@ export const EmployeeContent = ({ data }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              <EmployeeForm isUpdate data={row} />
+              <EmployeeForm
+                isUpdate
+                dataRow={row}
+                handleRefresh={handleRefresh} />
               <Box
                 h='1px'
                 w='100%'
@@ -96,9 +122,9 @@ export const EmployeeContent = ({ data }) => {
       <PageTitle title='メニュー情報管理' />
       <Table
         tableHeading={tableHeading}
-        tableData={data || []} />
+        tableData={employees || []} />
       <Box>
-        <EmployeeForm />
+        <EmployeeForm handleRefresh={handleRefresh} />
       </Box>
     </Box>
   )

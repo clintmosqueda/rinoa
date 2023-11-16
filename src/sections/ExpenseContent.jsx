@@ -7,22 +7,53 @@ import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 import { assignedEmployee } from "@/utils/assignedEmployee"
 import { ymdFormat } from "@/utils/timeHelper"
+import { useEffect, useState } from "react"
 
-export const ExpenseContent = ({ data, employees }) => {
+export const ExpenseContent = () => {
   const router = useRouter()
-  const employeeExpense = data.filter(f => f.type === 'employee')
+  const [employeeExpenses, setExployeeExpenses] = useState([])
+  const [employees, setEmployees] = useState([])
+
+  useEffect(() => {
+    handleGetData()
+  }, [])
+
+  const handleGetData = () => {
+    Promise.all([
+      fetch(`/api/expense`),
+      fetch(`/api/employee`),
+    ])
+      .then(async ([getExpense, getEmployee]) => {
+        const expense = await getExpense.json()
+        const employees = await getEmployee.json()
+        return {
+          expenses: expense,
+          employees: employees
+        }
+      })
+      .then(res => {
+        const { expenses, employees } = res
+        setExployeeExpenses(expenses.filter(f => f.type === 'employee'))
+        setEmployees(employees)
+      })
+      .catch(err => {
+        console.log('err', err)
+      })
+  }
 
   const handleDelete = async (id) => {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/expense/${id}`, {
+    const res = await fetch(`/api/expense/${id}`, {
       method: 'DELETE'
     })
 
     if (res.status === 200) {
-      router.refresh()
+      handleRefresh()
       console.log('Expense has been deleted')
     }
+  }
 
+  const handleRefresh = () => {
+    handleGetData()
   }
 
   const tableHeading = [
@@ -91,7 +122,7 @@ export const ExpenseContent = ({ data, employees }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              <ExpenseForm isUpdate data={row} />
+              <ExpenseForm isUpdate dataRow={row} handleRefresh={handleRefresh} />
               <Box
                 h='1px'
                 w='100%'
@@ -116,9 +147,9 @@ export const ExpenseContent = ({ data, employees }) => {
       <PageTitle title='メニュー情報管理' />
       <Table
         tableHeading={tableHeading}
-        tableData={employeeExpense} />
+        tableData={employeeExpenses} />
       <Box>
-        <ExpenseForm />
+        <ExpenseForm handleRefresh={handleRefresh} />
       </Box>
     </Box>
   )

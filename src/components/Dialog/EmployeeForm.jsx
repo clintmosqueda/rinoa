@@ -9,7 +9,7 @@ import { addEmployee, updateEmployee } from "@/lib/employee";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const EmployeeForm = ({ isUpdate = false, data }) => {
+export const EmployeeForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -21,21 +21,21 @@ export const EmployeeForm = ({ isUpdate = false, data }) => {
   } = useForm()
 
   useEffect(() => {
-    if (data) {
+    if (dataRow) {
       reset({
-        name: data.name,
-        phone: data.phone,
-        address: data.address,
-        position: data.position,
-        salary: data.salary,
+        name: dataRow.name,
+        phone: dataRow.phone,
+        address: dataRow.address,
+        position: dataRow.position,
+        salary: dataRow.salary,
       })
     }
-  }, [data])
+  }, [dataRow])
 
   const submitAdd = async (formData) => {
-    addEmployee(formData)
+    const response = await addEmployee(formData)
     onClose()
-    router.refresh()
+    handleRefresh()
     reset({
       name: '',
       price: '',
@@ -46,18 +46,18 @@ export const EmployeeForm = ({ isUpdate = false, data }) => {
   }
 
   const submitUpdate = async (formData) => {
-    console.log('formData', formData)
-    updateEmployee(data.id, formData)
-    onClose()
-    router.refresh()
-    reset({
-      name: '',
-      phone: '',
-      address: '',
-      position: '',
-      salary: '',
-    })
-
+    const response = await updateEmployee(dataRow.id, formData)
+    if (response.status === 200) {
+      onClose()
+      handleRefresh()
+      reset({
+        name: '',
+        phone: '',
+        address: '',
+        position: '',
+        salary: '',
+      })
+    }
   }
 
   const UpdateBtn = () => (

@@ -4,22 +4,39 @@ import { PageTitle } from "@/components/PageTitle"
 import { Table } from "@/components/Table"
 import { Box, Icon, Text, Flex } from "@chakra-ui/react"
 import { TbDots } from 'react-icons/tb'
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
-export const MenuContent = ({ data }) => {
-  const router = useRouter()
+export const MenuContent = () => {
+  const [menu, setMenu] = useState([])
+
+  useEffect(() => {
+    handleGetMenu()
+  }, [])
+
+  const handleGetMenu = async () => {
+    try {
+      const res = await fetch(`/api/menu`)
+      const data = await res.json()
+      setMenu(data)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
 
   const handleDelete = async (id) => {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/menu/${id}`, {
+    const res = await fetch(`/api/menu/${id}`, {
       method: 'DELETE'
     })
 
     if (res.status === 200) {
-      router.refresh()
+      handleRefresh()
       console.log('the product has been deleted')
     }
+  }
 
+  const handleRefresh = () => {
+    handleGetMenu()
   }
 
   const tableHeading = [
@@ -64,7 +81,7 @@ export const MenuContent = ({ data }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              <MenuForm isUpdate data={row} />
+              <MenuForm isUpdate dataRow={row} handleRefresh={handleRefresh} />
               <Box
                 h='1px'
                 w='100%'
@@ -89,9 +106,9 @@ export const MenuContent = ({ data }) => {
       <PageTitle title='メニュー情報管理' />
       <Table
         tableHeading={tableHeading}
-        tableData={data} />
+        tableData={menu} />
       <Box>
-        <MenuForm />
+        <MenuForm handleRefresh={handleRefresh} />
       </Box>
     </Box>
   )

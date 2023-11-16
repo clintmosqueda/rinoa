@@ -1,5 +1,6 @@
 'use client'
 import { Box, Text, Flex, Input, Button, RadioGroup, Icon, Spinner } from "@chakra-ui/react"
+import { useToast } from "@chakra-ui/react";
 import { TbMinus } from 'react-icons/tb'
 import { SectionLabel } from "@/components/SectionLabel"
 import { useEffect, useState } from "react";
@@ -8,7 +9,6 @@ import { AddBtn } from "@/components/AddBtn";
 import { CustomRadio } from "@/components/CustomRadio";
 import Select from 'react-select'
 import { useRouter } from "next/navigation";
-import { useToast } from '@chakra-ui/react'
 
 const inputStyle = () => ({
   // backgroundColor: 'red'
@@ -42,9 +42,32 @@ const customStyles = {
   }
 }
 
+const initialMenuState = {
+  id: 1,
+  menuId: '',
+  price: 0,
+  menuEmployeeId: null,
+  discount: 0,
+  total: 0,
+  defaultPrice: 0,
+  type: 'Menu'
+}
+
+const initialProductState = {
+  id: 1,
+  productId: '',
+  price: 0,
+  productEmployeeId: null,
+  quantity: 1,
+  discount: 0,
+  total: 0,
+  defaultPrice: 0,
+  type: 'Product'
+}
+
 export const OrderContent = ({
   paymentMethods,
-  customers,
+  // customers,
   productList,
   menuList,
   employees
@@ -52,30 +75,13 @@ export const OrderContent = ({
   const toast = useToast()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const [menus, setMenus] = useState([{
-    id: 1,
-    menuId: '',
-    price: 0,
-    menuEmployeeId: null,
-    discount: 0,
-    total: 0,
-    defaultPrice: 0,
-    type: 'Menu'
-  }])
-  const [products, setProducts] = useState([{
-    id: 1,
-    productId: '',
-    price: 0,
-    productEmployeeId: null,
-    quantity: 1,
-    discount: 0,
-    total: 0,
-    defaultPrice: 0,
-    type: 'Product'
-  }])
+  const [processing, setProcessing] = useState(false)
+  const [menus, setMenus] = useState([initialMenuState])
+  const [products, setProducts] = useState([initialProductState])
   const [merchantId, setMerchantId] = useState(null)
   const [accountantId, setAccountantId] = useState(null)
   const [customerId, setCustomerId] = useState(null)
+  const [customers, setCustomers] = useState([])
   const [total, setTotal] = useState(0)
   const [error, setError] = useState({
     customerError: false,
@@ -88,7 +94,25 @@ export const OrderContent = ({
   })
 
   useEffect(() => {
-    console.log('menus', menus)
+    handleGetCustomer()
+  }, [])
+
+  const handleGetCustomer = async () => {
+    try {
+      const res = await fetch(`/api/customer`)
+      const data = await res.json()
+      setCustomers(data)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  const handleRefreshCustomer = () => {
+    handleGetCustomer()
+  }
+
+
+  useEffect(() => {
     const menuSubtotal = menus.map(menu => {
       let price = parseFloat(menu.price)
       let discount = parseFloat(menu.discount)
@@ -198,6 +222,14 @@ export const OrderContent = ({
     }
   }
 
+  const resetState = () => {
+    setMenus([initialMenuState])
+    setProducts([initialProductState])
+    setMerchantId(null)
+    setAccountantId(null)
+    setCustomerId(null)
+  }
+
   const handleSubmit = async () => {
     if (!customerId) {
       setError({ ...error, customerError: true })
@@ -228,6 +260,7 @@ export const OrderContent = ({
       return
     }
 
+    setProcessing(true)
     setLoading(true)
 
     const menuData = menus.map(menu => {
@@ -269,11 +302,21 @@ export const OrderContent = ({
       });
 
       if (res.status === 201) {
+        resetState()
         setLoading(false)
-        location.reload();
+        toast({
+          title: "Registration Complete",
+          // description: "We've created your account for you.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        })
+        setTimeout(() => {
+          location.reload();
+        }, 3100);
+
       } else {
         setLoading(false)
-        console.log(res)
       }
     } catch (error) {
       console.log("error", error);
@@ -379,7 +422,7 @@ export const OrderContent = ({
                 styles={customStyles}
               />
             </Box>
-            <RegisterCustomer />
+            <RegisterCustomer handleRefreshCustomer={handleRefreshCustomer} />
           </Flex>
           {error.customerError && (
             <Text fontSize='12px' color='red' mt='10px' as='p'>顧客選択 is required</Text>
@@ -808,6 +851,31 @@ export const OrderContent = ({
           )}
 
       </Button>
+      {processing && (
+        <Box
+          top='0'
+          left='0'
+          pos='fixed'
+          width='100vw'
+          height='100vh'
+          display='flex'
+          alignItems='center'
+          justifyContent='center'
+          bg='rgba( 255, 255, 255, 0.3 )'
+          zIndex='99'
+          backdropFilter='blur( 2px )'
+        >
+          {loading && (
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="brand.purple"
+              size="xl" />
+          )}
+        </Box>
+      )}
+
     </Flex>
   )
 }

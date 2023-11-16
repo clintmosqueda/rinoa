@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { links, adminLinks } from '@/utils/sideLinks'
 import Link from "next/link"
 import { TbLayoutDashboard } from 'react-icons/tb'
-import { useSession, signOut } from "next-auth/react"
+import { useSession, signOut, signIn } from "next-auth/react"
 
 export const Sidebar = () => {
   const pathname = usePathname()
@@ -66,10 +66,22 @@ export const Sidebar = () => {
             alignItems='center'
             padding='10px'
             gap='0 15px'
-            onClick={handleLogout}
+            onClick={signOut}
           >
             <Icon fontSize='18px' as={TbLayoutDashboard} />
             <Text fontSize='14px'>Logout</Text>
+          </Flex>
+        )}
+        {status === 'unauthenticated' && (
+          <Flex
+            cursor='pointer'
+            alignItems='center'
+            padding='10px'
+            gap='0 15px'
+            onClick={signIn}
+          >
+            <Icon fontSize='18px' as={TbLayoutDashboard} />
+            <Text fontSize='14px'>Login</Text>
           </Flex>
         )}
 

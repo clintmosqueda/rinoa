@@ -44,6 +44,8 @@ export const updateMenu = async (id, formData) => {
     })
   })
 
+  return res
+
   if (res.status === 200) {
     console.log('the menu has been Updated')
   }

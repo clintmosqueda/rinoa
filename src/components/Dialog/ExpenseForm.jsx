@@ -11,7 +11,7 @@ import { useContext, useEffect, useState } from "react";
 import { ValueContext } from '@/context/ValueContext'
 import { CustomRadio } from "../CustomRadio";
 
-export const ExpenseForm = ({ isUpdate = false, data }) => {
+export const ExpenseForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
   const { employees } = useContext(ValueContext)
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -27,18 +27,19 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
   } = useForm()
 
   useEffect(() => {
-    if (data) {
+    if (dataRow) {
+      console.log('dataRow', dataRow)
       reset({
-        name: data.name,
-        cost: data.cost,
-        description: data.description
+        name: dataRow.name,
+        cost: dataRow.cost,
+        description: dataRow.description
       })
-      setEmployeeId(data.employee_id)
+      setEmployeeId(dataRow.employee_id)
     }
-  }, [data])
+  }, [dataRow])
 
   const submitAdd = async (formData) => {
-    if (!formData.employeeId) {
+    if (!employeeId) {
       setEmployeeError(true)
       return
     }
@@ -49,20 +50,24 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
       employeeId: parseInt(employeeId),
       type: 'employee'
     }
-    addExpense(data)
-    onClose()
-    router.refresh()
-    reset({
-      name: '',
-      cost: '',
-      description: '',
-    })
-    setEmployeeId(null)
+    console.log('data form', data)
+    const res = await addExpense(data)
+    if (res.status === 201) {
+      onClose()
+      handleRefresh()
+      reset({
+        name: '',
+        cost: '',
+        description: '',
+      })
+      setEmployeeId(null)
+    }
+
   }
 
   const submitUpdate = async (inputs) => {
     const formData = {
-      id: data.id,
+      id: dataRow.id,
       name: inputs.name,
       description: inputs.description,
       cost: parseFloat(inputs.cost),
@@ -70,16 +75,17 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
       type: 'employee'
     }
 
-    updateExpense(formData)
-    onClose()
-    router.refresh()
-    reset({
-      name: '',
-      cost: '',
-      description: '',
-    })
-    setEmployeeId(null)
-
+    const res = await updateExpense(formData)
+    if (res.status === 200) {
+      onClose()
+      handleRefresh()
+      reset({
+        name: '',
+        cost: '',
+        description: '',
+      })
+      setEmployeeId(null)
+    }
   }
 
   const UpdateBtn = () => (
@@ -92,6 +98,7 @@ export const ExpenseForm = ({ isUpdate = false, data }) => {
   )
 
   const handleRadioChange = (value) => {
+    console.log('value', value)
     setEmployeeId(value)
   }
 

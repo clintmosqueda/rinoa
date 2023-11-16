@@ -5,13 +5,28 @@ import { Table } from "@/components/Table"
 import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 import { PaymentMethodForm } from "@/components/Dialog/PaymentMethodForm"
+import { useEffect, useState } from "react"
 
 export const PaymentMethodContent = ({ data }) => {
   const router = useRouter()
+  const [payments, setPayments] = useState([])
+
+  useEffect(() => {
+    handleGetPayment()
+  }, [])
+
+  const handleGetPayment = async () => {
+    try {
+      const res = await fetch(`/api/paymentMethod`)
+      const data = await res.json()
+      setPayments(data)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
 
   const handleDelete = async (id) => {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/paymentMethod/${id}`, {
+    const res = await fetch(`/api/paymentMethod/${id}`, {
       method: 'DELETE'
     })
 
@@ -19,7 +34,10 @@ export const PaymentMethodContent = ({ data }) => {
       router.refresh()
       console.log('the product has been deleted')
     }
+  }
 
+  const handleRefresh = () => {
+    handleGetPayment()
   }
 
   const tableHeading = [
@@ -64,7 +82,7 @@ export const PaymentMethodContent = ({ data }) => {
               zIndex='1'
               borderRadius='5px'
               position='absolute'>
-              <PaymentMethodForm isUpdate data={row} />
+              <PaymentMethodForm isUpdate dataRow={row} handleRefresh={handleRefresh} />
               <Box
                 h='1px'
                 w='100%'
@@ -89,9 +107,9 @@ export const PaymentMethodContent = ({ data }) => {
       <PageTitle title='メニュー情報管理' />
       <Table
         tableHeading={tableHeading}
-        tableData={data} />
+        tableData={payments} />
       <Box>
-        <PaymentMethodForm />
+        <PaymentMethodForm handleRefresh={handleRefresh} />
       </Box>
     </Box>
   )

@@ -9,7 +9,7 @@ import { addPaymentMethod, updatePaymentMethod } from "@/lib/paymentMethod";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const PaymentMethodForm = ({ isUpdate = false, data }) => {
+export const PaymentMethodForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -21,33 +21,38 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
   } = useForm()
 
   useEffect(() => {
-    if (data) {
+    if (dataRow) {
       reset({
-        name: data.name,
-        interest: data.interest
+        name: dataRow.name,
+        interest: dataRow.interest
       })
     }
-  }, [data])
+  }, [dataRow])
 
   const submitAdd = async (formData) => {
-    addPaymentMethod(formData)
-    onClose()
-    router.refresh()
-    reset({
-      name: '',
-      interest: ''
-    })
+    const response = await addPaymentMethod(formData)
+    if (response.status === 201) {
+      onClose()
+      handleRefresh()
+      reset({
+        name: '',
+        interest: ''
+      })
+    }
   }
 
   const submitUpdate = async (formData) => {
-    updatePaymentMethod(data.id, formData)
-    onClose()
-    router.refresh()
-    reset({
-      name: '',
-      interest: ''
-    })
-
+    const response = await updatePaymentMethod(dataRow.id, formData)
+    if (response.status === 200) {
+      onClose()
+      handleRefresh()
+      reset({
+        name: '',
+        interest: ''
+      })
+    } else {
+      onClose()
+    }
   }
 
   const UpdateBtn = () => (
@@ -78,12 +83,7 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
           <Input
             borderColor="brand.lighterGray"
             {...register('name', {
-              validate: {
-                required: (val) => {
-                  let notEmpty = val?.trim().length > 0
-                  return notEmpty
-                },
-              },
+              required: true
             })}
           />
         </FormRowInput>
@@ -101,12 +101,7 @@ export const PaymentMethodForm = ({ isUpdate = false, data }) => {
                 type="number"
                 borderColor="brand.lighterGray"
                 {...register('interest', {
-                  validate: {
-                    required: (val) => {
-                      let notEmpty = val?.trim().length > 0
-                      return notEmpty
-                    },
-                  },
+                  required: true
                 })}
               />
             </Box>

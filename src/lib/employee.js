@@ -48,6 +48,8 @@ export const updateEmployee = async (id, formData) => {
     })
   })
 
+  return res
+
   if (res.status === 200) {
     console.log('Employee record has been Updated')
   }

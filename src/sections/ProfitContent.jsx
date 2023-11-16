@@ -7,30 +7,82 @@ import { TbDots } from 'react-icons/tb'
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
-export const ProfitContent = ({ expenses, sales }) => {
-  console.log('expenses', expenses)
-  const [profit, setProfit] = useState()
+export const ProfitContent = () => {
   const router = useRouter()
+  const [profit, setProfit] = useState()
+  const [allExpense, setAllExpense] = useState([])
+  const [sales, setSales] = useState([])
+
+  useEffect(() => {
+    handleGetData()
+  }, [])
+
+  const handleGetData = () => {
+    Promise.all([
+      fetch(`/api/expense`),
+      fetch(`/api/order`),
+      fetch(`/api/employee`),
+    ])
+      .then(async ([getExpense, getOrder, getEmployee]) => {
+        const expense = await getExpense.json()
+        const orders = await getOrder.json()
+        const employees = await getEmployee.json()
+        return {
+          expenses: expense,
+          orders: orders,
+          employees: employees
+        }
+      })
+      .then(res => {
+        const { expenses, orders, employees } = res
+        const salaryExpenses = employees.reduce((acc, cur) => (acc + cur.salary), 0)
+        const employeeExpenses = expenses.filter(expense => expense.type === 'employee').reduce((acc, curr) => (acc + curr.cost), 0)
+        const shopExpenses = expenses.filter(expense => expense.type === 'admin').map(expense => {
+          return {
+            id: expense.id,
+            name: expense.name,
+            cost: expense.cost,
+            description: expense.description
+          }
+        })
+
+        const allExpense = [
+          { name: 'Employee Expenses', cost: employeeExpenses },
+          { name: 'Salary Expenses', cost: salaryExpenses },
+          ...shopExpenses
+        ]
+        setAllExpense(allExpense)
+
+        setSales(orders.reduce((acc, cur) => (acc + cur.grand_total), 0))
+      })
+      .catch(err => {
+        console.log('err', err)
+      })
+  }
 
   const handleDelete = async (id) => {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/expense/${id}`, {
+    const res = await fetch(`/api/expense/${id}`, {
       method: 'DELETE'
     })
 
     if (res.status === 200) {
-      router.refresh()
+      handleRefresh()
       console.log('Item has been deleted')
     }
   }
 
   useEffect(() => {
     handleProfit()
-  }, [expenses, sales])
+  }, [allExpense, sales])
 
   const handleProfit = () => {
-    let totalExpense = expenses.reduce((acc, cur) => (acc + cur.cost), 0)
+    let totalExpense = allExpense.reduce((acc, cur) => (acc + cur.cost), 0)
     setProfit(sales - totalExpense)
+  }
+
+  const handleRefresh = () => {
+    handleGetData()
   }
 
   const tableHeading = [
@@ -76,7 +128,7 @@ export const ProfitContent = ({ expenses, sales }) => {
                 zIndex='1'
                 borderRadius='5px'
                 position='absolute'>
-                <ProfitForm isUpdate data={row} />
+                <ProfitForm isUpdate dataRow={row} handleRefresh={handleRefresh} />
                 <Box
                   h='1px'
                   w='100%'
@@ -102,9 +154,9 @@ export const ProfitContent = ({ expenses, sales }) => {
       <PageTitle title='Profit' />
       <Table
         tableHeading={tableHeading}
-        tableData={expenses} />
+        tableData={allExpense} />
       <Box>
-        <ProfitForm />
+        <ProfitForm handleRefresh={handleRefresh} />
       </Box>
       <Flex
         w='100%'

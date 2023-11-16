@@ -17,7 +17,7 @@ import { FormRowInput } from "../FormRowInput";
 import { useState } from "react";
 import { CustomRadio } from "@/components/CustomRadio";
 
-export const RegisterCustomer = () => {
+export const RegisterCustomer = ({ handleRefreshCustomer }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [values, setValues] = useState({
     name: '',
@@ -87,7 +87,7 @@ export const RegisterCustomer = () => {
       })
       if (res.status === 201) {
         onClose()
-        location.reload();
+        handleRefreshCustomer()
       } else {
         console.log(res)
       }

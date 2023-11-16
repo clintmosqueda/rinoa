@@ -19,6 +19,7 @@ export const addExpense = async (formData) => {
         type: formData.type
       })
     })
+    return res
     const data = await res.json()
 
   } catch (error) {
@@ -46,6 +47,7 @@ export const updateExpense = async (formData) => {
       employee_id: parseInt(formData.employeeId),
     })
   })
+  return res
 
   if (res.status === 200) {
     console.log('Expense has been Updated')

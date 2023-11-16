@@ -9,7 +9,7 @@ import { addProduct, updateProduct, getProduct } from "@/lib/product";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const ProductForm = ({ isUpdate = false, data }) => {
+export const ProductForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -21,13 +21,13 @@ export const ProductForm = ({ isUpdate = false, data }) => {
   } = useForm()
 
   useEffect(() => {
-    if (data) {
+    if (dataRow) {
       reset({
-        name: data.name,
-        price: data.price
+        name: dataRow.name,
+        price: dataRow.price
       })
     }
-  }, [data])
+  }, [dataRow])
 
   const submitAdd = async (formData) => {
     const data = {
@@ -35,14 +35,18 @@ export const ProductForm = ({ isUpdate = false, data }) => {
       price: parseFloat(formData.price),
       type: 'product'
     }
-    addProduct(data)
-    onClose()
-    router.refresh()
-    // getProduct()
-    reset({
-      name: '',
-      price: ''
-    })
+    const response = await addProduct(data)
+
+    if (response.status === 201) {
+      handleRefresh()
+      onClose()
+      reset({
+        name: '',
+        price: ''
+      })
+    } else {
+      onClose()
+    }
   }
 
   const submitUpdate = async (formData) => {
@@ -51,14 +55,17 @@ export const ProductForm = ({ isUpdate = false, data }) => {
       price: parseFloat(formData.price),
       type: 'product'
     }
-    updateProduct(data.id, productData)
-    onClose()
-    router.refresh()
-    reset({
-      name: '',
-      price: ''
-    })
-
+    const response = await updateProduct(dataRow.id, productData)
+    if (response.status === 200) {
+      handleRefresh()
+      onClose()
+      reset({
+        name: '',
+        price: ''
+      })
+    } else {
+      onClose()
+    }
   }
 
   const UpdateBtn = () => (

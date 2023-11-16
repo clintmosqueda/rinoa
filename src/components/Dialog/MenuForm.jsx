@@ -9,7 +9,7 @@ import { addMenu, updateMenu } from "@/lib/menu";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const MenuForm = ({ isUpdate = false, data }) => {
+export const MenuForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -21,13 +21,13 @@ export const MenuForm = ({ isUpdate = false, data }) => {
   } = useForm()
 
   useEffect(() => {
-    if (data) {
+    if (dataRow) {
       reset({
-        name: data.name,
-        price: data.price,
+        name: dataRow.name,
+        price: dataRow.price,
       })
     }
-  }, [data])
+  }, [dataRow])
 
   const submitAdd = async (formData) => {
     const data = {
@@ -37,7 +37,7 @@ export const MenuForm = ({ isUpdate = false, data }) => {
     }
     addMenu(data)
     onClose()
-    router.refresh()
+    handleRefresh()
     reset({
       name: '',
       price: ''
@@ -50,14 +50,15 @@ export const MenuForm = ({ isUpdate = false, data }) => {
       price: parseFloat(formData.price),
       type: 'menu'
     }
-    updateMenu(data.id, productData)
-    onClose()
-    router.refresh()
-    reset({
-      name: '',
-      price: ''
-    })
-
+    const response = await updateMenu(dataRow.id, productData)
+    if (response.status === 200) {
+      onClose()
+      handleRefresh()
+      reset({
+        name: '',
+        price: ''
+      })
+    }
   }
 
   const UpdateBtn = () => (
