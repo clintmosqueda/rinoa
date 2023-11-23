@@ -1,5 +1,4 @@
 'use client'
-
 import { Modal } from "./Modal"
 import { Button, Icon, Box, Text, Flex, Input, useDisclosure, useToast } from '@chakra-ui/react'
 import { AddBtn } from "@/components/AddBtn"
@@ -31,7 +30,7 @@ export const EmployeeForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
         salary: dataRow.salary,
       })
     }
-  }, [])
+  }, [dataRow, reset])
 
   const submitAdd = async (formData) => {
     const response = await addEmployee(formData)

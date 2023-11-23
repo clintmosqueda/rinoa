@@ -28,7 +28,7 @@ export const ProductForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
         price: dataRow.price
       })
     }
-  }, [])
+  }, [dataRow, reset])
 
   const submitAdd = async (formData) => {
     const data = {

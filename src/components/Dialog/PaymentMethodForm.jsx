@@ -28,7 +28,7 @@ export const PaymentMethodForm = ({ handleRefresh, isUpdate = false, dataRow }) 
         interest: dataRow.interest
       })
     }
-  }, [])
+  }, [dataRow, reset])
 
   const submitAdd = async (formData) => {
     const response = await addPaymentMethod(formData)

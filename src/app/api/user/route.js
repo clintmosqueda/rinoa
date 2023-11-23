@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/utils/connect";
 
-export const GET = async () => {
+export const GET = async (req) => {
   const query = Object.fromEntries(new URL(req.url).searchParams.entries());
   const { user, password } = query
   try {

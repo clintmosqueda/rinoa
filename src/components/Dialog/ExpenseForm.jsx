@@ -29,7 +29,6 @@ export const ExpenseForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
 
   useEffect(() => {
     if (dataRow) {
-      console.log('dataRow', dataRow)
       reset({
         name: dataRow.name,
         cost: dataRow.cost,
@@ -37,7 +36,7 @@ export const ExpenseForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
       })
       setEmployeeId(dataRow.employee_id)
     }
-  }, [])
+  }, [dataRow, reset])
 
   const submitAdd = async (formData) => {
     if (!employeeId) {

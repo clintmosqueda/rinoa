@@ -30,7 +30,7 @@ export const ProfitForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
         description: dataRow.description
       })
     }
-  }, [])
+  }, [dataRow, reset])
 
   const submitAdd = async (formData) => {
     console.log('submitAdd', submitAdd)

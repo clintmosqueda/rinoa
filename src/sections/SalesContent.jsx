@@ -45,7 +45,7 @@ export const SalesContent = ({ employeeList }) => {
     }
 
     handleGetData()
-  }, [])
+  }, [query])
 
 
 
