@@ -28,7 +28,7 @@ export const MenuForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
         price: dataRow.price,
       })
     }
-  }, [dataRow])
+  }, [])
 
   const submitAdd = async (formData) => {
     const data = {

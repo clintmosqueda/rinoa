@@ -31,7 +31,7 @@ export const EmployeeForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
         salary: dataRow.salary,
       })
     }
-  }, [dataRow])
+  }, [])
 
   const submitAdd = async (formData) => {
     const response = await addEmployee(formData)

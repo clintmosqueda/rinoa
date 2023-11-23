@@ -36,16 +36,18 @@ export const SalesContent = ({ employeeList }) => {
   const inchargeList = [{ id: 0, name: '全体' }, ...employees]
 
   useEffect(() => {
+    const handleGetData = async () => {
+      let fetchRes = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/sales?employeeId=${query.employeeId}&month=${query.month}`)
+        .then(response => response.json())
+        .then(data => data)
+      setSales(fetchRes)
+      handleTotal(fetchRes)
+    }
+
     handleGetData()
   }, [])
 
-  const handleGetData = async () => {
-    let fetchRes = await fetch(`${process.env.NEXT_PUBLIC_HOST_LINK}/api/sales?employeeId=${query.employeeId}&month=${query.month}`)
-      .then(response => response.json())
-      .then(data => data)
-    setSales(fetchRes)
-    handleTotal(fetchRes)
-  }
+
 
   const handleTotal = (data) => {
     const serviceSum = data.reduce((acc, cur) => (cur.type === 'Menu' ? acc + (cur.price - (cur.price * cur.discount / 100)) : acc), 0)

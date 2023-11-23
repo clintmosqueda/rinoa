@@ -27,7 +27,7 @@ export const MerchForm = ({ isUpdate = false, data }) => {
         price: data.price
       })
     }
-  }, [data])
+  }, [])
 
   const submitAdd = async (formData) => {
     addMerch(formData)

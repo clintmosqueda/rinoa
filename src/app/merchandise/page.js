@@ -2,9 +2,9 @@
 // import { MerchContent } from "@/sections/MerchContent"
 
 const Merchandise = async () => {
-  const merch = await getMerch()
+  // const merch = await getMerch()
   return (
-    <MerchContent data={merch || []} />
+    <></>
   )
 }
 

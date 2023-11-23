@@ -10,8 +10,8 @@ const Home = async () => {
   const customerData = await getCustomers()
   const products = await getProduct()
   const menus = await getMenu()
-  const employeeDate = await getEmployees()
-  const employees = employeeDate.map(employee => {
+  const employeeData = await getEmployees()
+  const employees = employeeData.map(employee => {
     return {
       id: employee.id,
       name: employee.name

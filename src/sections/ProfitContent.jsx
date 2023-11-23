@@ -80,13 +80,14 @@ export const ProfitContent = () => {
   }
 
   useEffect(() => {
-    handleProfit()
+    const totalExpense = allExpense.reduce((acc, cur) => (acc + cur.cost), 0)
+    setProfit(sales - totalExpense)
   }, [allExpense, sales])
 
-  const handleProfit = () => {
-    let totalExpense = allExpense.reduce((acc, cur) => (acc + cur.cost), 0)
-    setProfit(sales - totalExpense)
-  }
+  // const handleProfit = () => {
+  //   let totalExpense = allExpense.reduce((acc, cur) => (acc + cur.cost), 0)
+  //   setProfit(sales - totalExpense)
+  // }
 
   const handleRefresh = () => {
     handleGetData()

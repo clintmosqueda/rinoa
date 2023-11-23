@@ -37,7 +37,7 @@ export const ExpenseForm = ({ handleRefresh, isUpdate = false, dataRow }) => {
       })
       setEmployeeId(dataRow.employee_id)
     }
-  }, [dataRow])
+  }, [])
 
   const submitAdd = async (formData) => {
     if (!employeeId) {
